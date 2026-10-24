@@ -74,16 +74,13 @@ Dokumen ini menjadi acuan verifikasi kelayakan setiap fase pengembangan sebelum 
 ---
 
 ### Fase 6 — Pohon Leluhur, Keturunan, dan Navigasi Interaktif
-- [ ] Visualisasi graf menggunakan React Flow (`@xyflow/react`).
-- [ ] Mode tampilan dapat beralih antara:
-  - Mode Leluhur (*Pedigree / Ancestors View*).
-  - Mode Keturunan (*Descendants View*).
-  - Mode Gabungan (*Hourglass / Focus View*).
-- [ ] Nodus menampilkan kartu individu (nama, foto/inisial, tahun hidup, relasi, badge status verifikasi).
-- [ ] Hubungan pasangan ditampilkan dengan kartu pasangan/simpul serikat.
-- [ ] Navigasi interaktif: zoom, pan, pemusatan kembali (*re-center*), dan pemilihan individu fokus.
-- [ ] Pengambilan subgraph modular: cabang dapat diciutkan (*collapse*) dan diperluas (*expand*).
-- [ ] Tampilan responsif dan dapat dioperasikan dengan nyaman di perangkat ponsel.
+- [x] Visualisasi graf menggunakan React Flow (`@xyflow/react`).
+- [x] Mode tampilan dapat beralih antara: Mode Leluhur (*Ancestors*), Mode Keturunan (*Descendants*), dan Mode Gabungan (*Hourglass*).
+- [x] Nodus menampilkan kartu individu (nama, foto/inisial, tahun hidup, relasi, badge kelengkapan & verifikasi).
+- [x] Hubungan pasangan ditampilkan dengan kartu pasangan/simpul serikat (`unionNode`).
+- [x] Navigasi interaktif: zoom, pan, pemusatan kembali (*re-center*), MiniMap, dan pemilihan individu pusat.
+- [x] Pengambilan subgraph modular dan laci ringkasan detail individu (*drawer panel*).
+- [x] Tampilan responsif dan dapat dioperasikan dengan nyaman di perangkat ponsel maupun desktop.
 
 ---
 

@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "@xyflow/react/dist/style.css";
+
 :root {
   --background: #fdfbf7;
   --foreground: #2d2621;
