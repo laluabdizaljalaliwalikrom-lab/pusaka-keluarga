@@ -2,15 +2,39 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, MailCheck } from "lucide-react";
+import { ArrowLeft, MailCheck, AlertCircle } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setErrorMessage(null);
+
+    try {
+      const supabase = createClient();
+      const origin = typeof window !== "undefined" ? window.location.origin : "";
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: `${origin}/login`,
+      });
+
+      if (error) {
+        setErrorMessage(error.message);
+        setLoading(false);
+        return;
+      }
+
+      setSubmitted(true);
+    } catch (err: any) {
+      setErrorMessage(err?.message || "Terjadi kesalahan saat meminta pemulihan sandi.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -25,11 +49,18 @@ export default function ForgotPasswordPage() {
           </p>
         </div>
 
+        {errorMessage && (
+          <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 flex items-start space-x-2.5 text-xs">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
         {submitted ? (
           <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-3">
             <MailCheck className="w-8 h-8 text-emerald-600 mx-auto" />
             <p className="text-xs font-semibold text-emerald-900 leading-relaxed">
-              Tautan pemulihan kata sandi telah dikirimkan ke <strong>{email}</strong>. Silakan periksa kotak masuk email Anda.
+              Tautan pemulihan kata sandi telah dikirimkan ke <strong>{email}</strong>. Silakan periksa kotak masuk atau spam email Anda.
             </p>
             <Link
               href="/login"
@@ -54,9 +85,10 @@ export default function ForgotPasswordPage() {
 
             <button
               type="submit"
-              className="w-full py-3 rounded-xl bg-pusaka-800 hover:bg-pusaka-900 text-white font-bold shadow transition-all text-xs"
+              disabled={loading}
+              className="w-full py-3 rounded-xl bg-pusaka-800 hover:bg-pusaka-900 text-white font-bold shadow transition-all text-xs disabled:opacity-60 cursor-pointer"
             >
-              Kirim Tautan Pemulihan
+              {loading ? "Mengirim Tautan..." : "Kirim Tautan Pemulihan"}
             </button>
           </form>
         )}
@@ -74,4 +106,3 @@ export default function ForgotPasswordPage() {
     </div>
   );
 }
-

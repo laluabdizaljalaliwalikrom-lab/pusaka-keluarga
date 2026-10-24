@@ -3,21 +3,48 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ShieldCheck, LogIn } from "lucide-react";
+import { LogIn, AlertCircle } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+    setErrorMessage(null);
+
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+
+      if (error) {
+        if (error.message.toLowerCase().includes("invalid login credentials")) {
+          setErrorMessage("Email atau kata sandi salah. Silakan periksa kembali.");
+        } else if (error.message.toLowerCase().includes("email not confirmed")) {
+          setErrorMessage("Email Anda belum diverifikasi. Silakan periksa kotak masuk/spam email Anda.");
+        } else {
+          setErrorMessage(error.message);
+        }
+        setLoading(false);
+        return;
+      }
+
+      if (data.user) {
+        router.push("/dashboard");
+        router.refresh();
+      }
+    } catch (err: any) {
+      setErrorMessage(err?.message || "Terjadi kesalahan saat proses login.");
       setLoading(false);
-      router.push("/dashboard");
-    }, 600);
+    }
   };
 
   return (
@@ -34,6 +61,13 @@ export default function LoginPage() {
             Akses silsilah trah dan arsip keluarga besar Anda
           </p>
         </div>
+
+        {errorMessage && (
+          <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 flex items-start space-x-2.5 text-xs">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
 
         <form onSubmit={handleLogin} className="space-y-4 text-xs">
           <div>
@@ -71,10 +105,10 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-pusaka-800 hover:bg-pusaka-900 text-white font-bold shadow transition-all flex items-center justify-center space-x-2 text-xs"
+            className="w-full py-3 rounded-xl bg-pusaka-800 hover:bg-pusaka-900 text-white font-bold shadow transition-all flex items-center justify-center space-x-2 text-xs disabled:opacity-60 cursor-pointer"
           >
             <LogIn className="w-4 h-4" />
-            <span>{loading ? "Memproses..." : "Masuk ke Silsilah"}</span>
+            <span>{loading ? "Memproses Masuk..." : "Masuk ke Silsilah"}</span>
           </button>
         </form>
 
@@ -88,4 +122,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
