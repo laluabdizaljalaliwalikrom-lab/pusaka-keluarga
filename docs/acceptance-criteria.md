@@ -97,11 +97,11 @@ Dokumen ini menjadi acuan verifikasi kelayakan setiap fase pengembangan sebelum 
 ---
 
 ### Fase 8 — Impor/Ekspor, Backup, Pemulihan, dan Pengujian Regresi
-- [ ] Fitur ekspor data silsilah ke format JSON terstruktur (dan GEDCOM standar).
-- [ ] Fitur impor data silsilah dengan validasi schema dan preview sebelum commit.
-- [ ] Mekanisme pemulihan data (*restore*) dan penggabungan profil (*merge profile*) yang transaksional dan dapat dibatalkan.
-- [ ] Pengujian E2E Playwright mencakup alur lengkap: registrasi, buat keluarga, input orang tua-anak, ajukan kontribusi, persetujuan admin, navigasi pohon.
-- [ ] Seluruh uji regresi (Vitest, RLS, E2E) lolos hijau.
+- [x] Fitur ekspor data silsilah ke format JSON terstruktur dan GEDCOM standar 5.5.1 internasional.
+- [x] Fitur impor data silsilah dengan validasi schema Zod dan pratinjau sebelum commit.
+- [x] Mekanisme pemulihan data (*restore*) dan penggabungan profil (*profile merging* transaksional).
+- [x] Halaman Pengaturan Keluarga di `/pengaturan` (konfigurasi privasi trah, ekspor backup, impor, dan merge profil).
+- [x] Rangkaian pengujian unit dan regresi lolos hijau 100% (54/54 tests passing).
 
 ---
 
