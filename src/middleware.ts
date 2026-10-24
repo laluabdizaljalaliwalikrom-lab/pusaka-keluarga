@@ -7,14 +7,16 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Cocokkan semua path request kecuali:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - file ekstensi gambar / publik (.svg, .png, .jpg, dll)
-     */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/dashboard/:path*",
+    "/pohon/:path*",
+    "/individu/:path*",
+    "/direktori/:path*",
+    "/kontribusi/:path*",
+    "/sumber/:path*",
+    "/anggota/:path*",
+    "/pengaturan/:path*",
+    "/login",
+    "/register",
+    "/forgot-password",
   ],
 };
-
