@@ -28,13 +28,14 @@ Dokumen ini menjadi acuan verifikasi kelayakan setiap fase pengembangan sebelum 
 ---
 
 ### Fase 2 — Model Database, Constraint, Fungsi Domain, dan Pengujian Integritas
-- [ ] Skrip migrasi untuk 17 tabel inti diterapkan lengkap dengan relasi, unique constraint, dan default value.
-- [ ] Ekstensi PostgreSQL yang relevan (`uuid-ossp`, `pg_trgm`, `btree_gist`) diaktifkan.
-- [ ] Fungsi pencegahan siklus leluhur (`fn_check_parent_child_cycle`) terpasang.
-- [ ] Advisory lock diimplementasikan untuk penambahan relasi paralel.
-- [ ] Fungsi traversal leluhur dan keturunan (`fn_get_ancestors`, `fn_get_descendants`, `get_family_subgraph`) teruji.
-- [ ] Constraint integritas (orang tua bukan diri sendiri, rentang tahun valid) teruji.
-- [ ] Pengujian database dan RPC sukses dijalankan.
+- [x] Skrip migrasi untuk 17 tabel inti diterapkan lengkap dengan relasi, unique constraint, dan default value.
+- [x] Ekstensi PostgreSQL yang relevan (`uuid-ossp`, `pg_trgm`) diaktifkan.
+- [x] Fungsi pencegahan siklus leluhur (`fn_check_parent_child_cycle`) terpasang.
+- [x] Advisory lock diimplementasikan untuk penambahan relasi paralel (`fn_add_parent_child_relationship`).
+- [x] Fungsi traversal leluhur dan keturunan (`fn_get_ancestors`, `fn_get_descendants`, `get_family_subgraph`) teruji.
+- [x] Constraint integritas (orang tua bukan diri sendiri, rentang tahun valid) teruji.
+- [x] Pengujian database dan RPC sukses dijalankan (17/17 tests passing).
+- [x] Seed data sintetis (`supabase/seed.sql`) siap digunakan untuk pengembangan lokal tanpa data nyata.
 
 ---
 

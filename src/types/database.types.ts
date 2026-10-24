@@ -684,6 +684,71 @@ export interface Database {
         };
         Returns: boolean;
       };
+      fn_add_parent_child_relationship: {
+        Args: {
+          p_family_id: string;
+          p_parent_id: string;
+          p_child_id: string;
+          p_union_id?: string | null;
+          p_relationship_type?: RelationshipType;
+          p_confidence?: RelationshipConfidence;
+          p_notes?: string | null;
+        };
+        Returns: string;
+      };
+      fn_get_ancestors: {
+        Args: {
+          p_person_id: string;
+          p_max_depth?: number;
+        };
+        Returns: {
+          person_id: string;
+          primary_name: string;
+          gender: Gender;
+          birth_year: number | null;
+          death_year: number | null;
+          is_living: boolean;
+          avatar_url: string | null;
+          depth: number;
+          relationship_type: RelationshipType;
+          child_id: string;
+        }[];
+      };
+      fn_get_descendants: {
+        Args: {
+          p_person_id: string;
+          p_max_depth?: number;
+        };
+        Returns: {
+          person_id: string;
+          primary_name: string;
+          gender: Gender;
+          birth_year: number | null;
+          death_year: number | null;
+          is_living: boolean;
+          avatar_url: string | null;
+          depth: number;
+          relationship_type: RelationshipType;
+          parent_id: string;
+        }[];
+      };
+      get_family_subgraph: {
+        Args: {
+          p_person_id: string;
+          p_ancestor_depth?: number;
+          p_descendant_depth?: number;
+        };
+        Returns: Json;
+      };
+      fn_merge_persons: {
+        Args: {
+          p_family_id: string;
+          p_source_person_id: string;
+          p_target_person_id: string;
+          p_actor_id: string;
+        };
+        Returns: Json;
+      };
       is_family_member: {
         Args: {
           p_family_id: string;
