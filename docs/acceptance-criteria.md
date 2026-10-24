@@ -85,13 +85,14 @@ Dokumen ini menjadi acuan verifikasi kelayakan setiap fase pengembangan sebelum 
 ---
 
 ### Fase 7 — Kontribusi, Persetujuan, Audit, dan Media Privat
-- [ ] Alur kontribusi bagi peran `contributor`: pengajuan usulan perubahan data ke `change_proposals`.
-- [ ] Antarmuka kurasi/peninjauan untuk `family_admin` dan `editor` (menyetujui / menolak usulan dengan catatan).
-- [ ] Eksekusi persetujuan usulan secara atomik di database.
-- [ ] Pengunggahan berkas foto dan dokumen ke Supabase Storage (bucket privat `family-media`).
-- [ ] Akses berkas privat terverifikasi melalui URL bertanda tangan (*signed URLs*) atau proxy terotentikasi.
-- [ ] Audit trail (`audit_logs`) mencatat seluruh aksi sensitif dan persetujuan perubahan.
-- [ ] Halaman Manajemen Anggota (undang anggota, ubah peran).
+- [x] Alur kontribusi bagi peran `contributor`: pengajuan usulan perubahan data ke `change_proposals`.
+- [x] Antarmuka kurasi/peninjauan untuk `family_admin` dan `editor` (menyetujui / menolak usulan dengan catatan).
+- [x] Eksekusi persetujuan usulan secara atomik di database (RPC `fn_approve_change_proposal` dan `fn_reject_change_proposal`).
+- [x] Pengunggahan berkas foto dan dokumen ke Supabase Storage (bucket privat `family-media` limit 10MB).
+- [x] Akses berkas privat terverifikasi melalui URL bertanda tangan (*signed URLs*) atau proxy terotentikasi.
+- [x] Audit trail (`audit_logs`) mencatat seluruh aksi sensitif dan persetujuan perubahan secara otomatis.
+- [x] Halaman Manajemen Anggota (`/anggota`: undang anggota, ubah peran dari Owner hingga Reader).
+- [x] Halaman Kontribusi & Review (`/kontribusi`).
 
 ---
 
