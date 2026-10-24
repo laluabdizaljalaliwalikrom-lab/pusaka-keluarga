@@ -61,7 +61,15 @@ BEGIN
         raw_app_meta_data,
         raw_user_meta_data,
         created_at,
-        updated_at
+        updated_at,
+        confirmation_token,
+        recovery_token,
+        email_change,
+        email_change_token_new,
+        email_change_token_current,
+        phone_change,
+        phone_change_token,
+        reauthentication_token
     ) VALUES 
         (
             v_user_admin_id,
@@ -74,7 +82,8 @@ BEGIN
             '{"provider":"email","providers":["email"]}'::jsonb,
             '{"full_name":"Kuncoro Adiwijaya (Admin)"}'::jsonb,
             now(),
-            now()
+            now(),
+            '', '', '', '', '', '', '', ''
         ),
         (
             v_user_editor_id,
@@ -87,7 +96,8 @@ BEGIN
             '{"provider":"email","providers":["email"]}'::jsonb,
             '{"full_name":"Siti Nurhaliza (Editor)"}'::jsonb,
             now(),
-            now()
+            now(),
+            '', '', '', '', '', '', '', ''
         ),
         (
             v_user_contrib_id,
@@ -100,9 +110,25 @@ BEGIN
             '{"provider":"email","providers":["email"]}'::jsonb,
             '{"full_name":"Bambang Supriyanto (Contributor)"}'::jsonb,
             now(),
-            now()
+            now(),
+            '', '', '', '', '', '', '', ''
         )
     ON CONFLICT (id) DO NOTHING;
+
+    -- 1.1 Pastikan tidak ada token NULL di auth.users (mencegah error 'Database error querying schema' di GoTrue)
+    UPDATE auth.users
+    SET 
+        confirmation_token = COALESCE(confirmation_token, ''),
+        recovery_token = COALESCE(recovery_token, ''),
+        email_change = COALESCE(email_change, ''),
+        email_change_token_new = COALESCE(email_change_token_new, ''),
+        email_change_token_current = COALESCE(email_change_token_current, ''),
+        phone_change = COALESCE(phone_change, ''),
+        phone_change_token = COALESCE(phone_change_token, ''),
+        reauthentication_token = COALESCE(reauthentication_token, '')
+    WHERE confirmation_token IS NULL 
+       OR recovery_token IS NULL 
+       OR email_change IS NULL;
 
     -- 2. Tautkan Identitas Auth
     INSERT INTO auth.identities (
