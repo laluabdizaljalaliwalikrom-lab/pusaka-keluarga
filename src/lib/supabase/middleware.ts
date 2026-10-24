@@ -13,63 +13,67 @@ export async function updateSession(request: NextRequest) {
     request,
   });
 
-  const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
+  try {
+    const supabase = createServerClient<Database>(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet: CookieToSet[]) {
+            cookiesToSet.forEach(({ name, value }) =>
+              request.cookies.set(name, value)
+            );
+            supabaseResponse = NextResponse.next({
+              request,
+            });
+            cookiesToSet.forEach(({ name, value, options }) =>
+              supabaseResponse.cookies.set(name, value, options)
+            );
+          },
         },
-        setAll(cookiesToSet: CookieToSet[]) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
-        },
-      },
+      }
+    );
+
+    // Menyegarkan sesi autentikasi jika kedaluwarsa
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    // Proteksi rute terotentikasi
+    const pathname = request.nextUrl.pathname;
+    const isAuthRoute =
+      pathname.startsWith("/login") ||
+      pathname.startsWith("/register") ||
+      pathname.startsWith("/forgot-password");
+    const isProtectedRoute =
+      pathname.startsWith("/dashboard") ||
+      pathname.startsWith("/pohon") ||
+      pathname.startsWith("/individu") ||
+      pathname.startsWith("/direktori") ||
+      pathname.startsWith("/kontribusi") ||
+      pathname.startsWith("/sumber") ||
+      pathname.startsWith("/anggota") ||
+      pathname.startsWith("/pengaturan");
+
+    if (!user && isProtectedRoute) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("redirectedFrom", pathname);
+      return NextResponse.redirect(url);
     }
-  );
 
-  // Menyegarkan sesi autentikasi jika kedaluwarsa
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    if (user && isAuthRoute) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/dashboard";
+      return NextResponse.redirect(url);
+    }
 
-  // Proteksi rute terotentikasi
-  const pathname = request.nextUrl.pathname;
-  const isAuthRoute =
-    pathname.startsWith("/login") ||
-    pathname.startsWith("/register") ||
-    pathname.startsWith("/forgot-password");
-  const isProtectedRoute =
-    pathname.startsWith("/dashboard") ||
-    pathname.startsWith("/pohon") ||
-    pathname.startsWith("/individu") ||
-    pathname.startsWith("/direktori") ||
-    pathname.startsWith("/kontribusi") ||
-    pathname.startsWith("/sumber") ||
-    pathname.startsWith("/anggota") ||
-    pathname.startsWith("/pengaturan");
-
-  if (!user && isProtectedRoute) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    url.searchParams.set("redirectedFrom", pathname);
-    return NextResponse.redirect(url);
+    return supabaseResponse;
+  } catch (error) {
+    console.error("Middleware updateSession error:", error);
+    return supabaseResponse;
   }
-
-  if (user && isAuthRoute) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
-  }
-
-  return supabaseResponse;
 }
-
