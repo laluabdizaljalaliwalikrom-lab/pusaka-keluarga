@@ -63,17 +63,13 @@ Dokumen ini menjadi acuan verifikasi kelayakan setiap fase pengembangan sebelum 
 ---
 
 ### Fase 5 — UI Direktori, Profil, dan Formulir
-- [ ] Tampilan antarmuka berbahasa Indonesia yang konsisten, bersih, dan responsif (desktop & mobile).
-- [ ] Halaman login, pendaftaran, dan pemulihan kata sandi berfungsi.
-- [ ] Halaman Direktori Individu dengan filter jenis kelamin, status hidup/wafat, dan pencarian instan.
-- [ ] Halaman Profil Individu yang memuat:
-  - Kartu identitas utama & foto.
-  - Daftar nama alternatif / gelar.
-  - Linimasa peristiwa hidup & tempat.
-  - Daftar orang tua, saudara kandung, pasangan, dan anak.
-  - Tab Klaim & Bukti Sumber.
-- [ ] Formulir tambah/edit individu dengan validasi masukan interaktif.
-- [ ] Halaman Repositori Sumber Informasi.
+- [x] Tampilan antarmuka berbahasa Indonesia yang konsisten, bersih, dan responsif (desktop & mobile).
+- [x] Halaman login, pendaftaran, dan pemulihan kata sandi berfungsi.
+- [x] Halaman Direktori Individu dengan filter jenis kelamin, status hidup/wafat, dan pencarian instan.
+- [x] Halaman Profil Individu yang memuat kartu identitas, nama alternatif/gelar, linimasa peristiwa, orang tua, pasangan, anak, serta tab klaim & bukti sumber.
+- [x] Formulir tambah/edit individu dengan validasi masukan interaktif dan deteksi potensi duplikat langsung.
+- [x] Halaman Repositori Sumber Informasi & Arsip.
+- [x] Dashboard ringkasan silsilah keluarga besar (Bani Kartosoedirjo) dengan metrik generasi dan status verifikasi.
 
 ---
 
