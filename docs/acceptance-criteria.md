@@ -40,13 +40,13 @@ Dokumen ini menjadi acuan verifikasi kelayakan setiap fase pengembangan sebelum 
 ---
 
 ### Fase 3 — Supabase Auth, Keanggotaan, Peran, dan RLS
-- [ ] Trigger otomatis sinkronisasi `auth.users` ke `public.profiles`.
-- [ ] Kebijakan RLS terpasang lengkap di 17 tabel dengan prinsip *deny-by-default*.
-- [ ] Helper otorisasi `is_family_member` dan `has_family_role` (`SECURITY DEFINER` aman) terpasang.
-- [ ] Isolasi multi-tenant terverifikasi (anggota keluarga A tidak dapat membaca/menulis data keluarga B).
-- [ ] Hak akses berdasarkan 5 peran (`owner`, `family_admin`, `editor`, `contributor`, `reader`) teruji.
-- [ ] Akses data privat (individu yang masih hidup, media privat) terlindungi dari peran `reader`.
-- [ ] Pengujian RLS otomatis menggunakan identitas peran yang berbeda berhasil 100%.
+- [x] Trigger otomatis sinkronisasi `auth.users` ke `public.profiles`.
+- [x] Kebijakan RLS terpasang lengkap di 17 tabel dengan prinsip *deny-by-default*.
+- [x] Helper otorisasi `is_family_member`, `has_family_role`, dan `get_user_active_family_ids` (`SECURITY DEFINER` aman) terpasang.
+- [x] Isolasi multi-tenant terverifikasi (anggota keluarga A tidak dapat membaca/menulis data keluarga B).
+- [x] Hak akses berdasarkan 5 peran (`owner`, `family_admin`, `editor`, `contributor`, `reader`) teruji.
+- [x] Akses data privat (individu yang masih hidup, media privat) terlindungi dari peran `reader`.
+- [x] Pengujian RLS otomatis menggunakan identitas peran yang berbeda berhasil 100% (36/36 tests passing).
 
 ---
 
