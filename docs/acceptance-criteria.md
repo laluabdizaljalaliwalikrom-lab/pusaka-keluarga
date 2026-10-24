@@ -106,10 +106,12 @@ Dokumen ini menjadi acuan verifikasi kelayakan setiap fase pengembangan sebelum 
 ---
 
 ### Fase 9 — Deployment Vercel dan Supabase Cloud
-- [ ] Dokumentasi panduan deployment lengkap (`docs/deployment.md`).
-- [ ] Environment variables produksi terkonfigurasi di Vercel dan Supabase Cloud.
-- [ ] Migrasi database diterapkan secara bersih pada Supabase Cloud.
-- [ ] Storage bucket dan kebijakan RLS produksi aktif.
-- [ ] Konfigurasi Auth redirect URLs dan email templates terverifikasi.
-- [ ] Domain kustom / URL Vercel berfungsi dengan performa optimal.
+- [x] Dokumentasi panduan deployment lengkap (`docs/deployment.md`).
+- [x] Environment variables produksi terkonfigurasi di Vercel dan Supabase Cloud.
+- [x] Migrasi database diterapkan secara bersih pada Supabase Cloud (`20250101000000_initial_schema.sql`, `20250102000000_domain_functions.sql`, `20250103000000_auth_and_rls.sql`, `20250104000000_proposals_and_media.sql`).
+- [x] Storage bucket dan kebijakan RLS produksi aktif (`family-media`).
+- [x] Konfigurasi Auth redirect URLs dan email templates terverifikasi.
+- [x] Domain kustom / URL Vercel berfungsi dengan performa optimal.
+- [x] Pemisahan development, preview, dan production terdefinisi.
+- [x] Prosedur backup, restore, dan disaster recovery terdokumentasi.
 
