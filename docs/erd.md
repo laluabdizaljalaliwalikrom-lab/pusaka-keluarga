@@ -306,3 +306,4 @@ Untuk memastikan kueri graf silsilah dan pencarian cepat:
 9. `CREATE INDEX idx_union_part_person ON union_participants(person_id);`
 10. `CREATE INDEX idx_claims_person ON claims(subject_person_id);`
 11. `CREATE INDEX idx_audit_family_created ON audit_logs(family_id, created_at DESC);`
+

@@ -138,3 +138,4 @@ Jika ditemukan dua entri orang yang ternyata merupakan individu yang sama (misal
    - Pindahkan klaim (`claims`), media (`media`), dan peristiwa (`event_persons`).
    - Catat operasi `MERGE` secara detail di `audit_logs` termasuk snapshot JSON seluruh data asli Profil $B$.
    - Tandai Profil $B$ sebagai merged (atau soft delete dengan referensi `merged_into_id = A`).
+

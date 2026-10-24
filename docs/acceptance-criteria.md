@@ -17,13 +17,13 @@ Dokumen ini menjadi acuan verifikasi kelayakan setiap fase pengembangan sebelum 
 ---
 
 ### Fase 1 — Setup Next.js, Supabase CLI, Konfigurasi Lokal, dan Migrasi Awal
-- [ ] Proyek Next.js 15+ App Router terinisialisasi dengan TypeScript strict mode.
-- [ ] Tailwind CSS dan pustaka UI terkonfigurasi.
-- [ ] Supabase CLI terkonfigurasi (`supabase/config.toml`).
-- [ ] File konfigurasi lingkungan (`.env.local.example`, `.env.test`) tersedia.
-- [ ] Utilitas Supabase client (`src/lib/supabase/client.ts`, `server.ts`, `middleware.ts`) dibuat dengan `@supabase/ssr`.
-- [ ] Baseline migration dapat dijalankan tanpa error di Supabase.
-- [ ] Build Next.js (`npm run build`) dan linting (`npm run lint`) sukses.
+- [x] Proyek Next.js 15+ App Router terinisialisasi dengan TypeScript strict mode.
+- [x] Tailwind CSS dan pustaka UI terkonfigurasi.
+- [x] Supabase CLI terkonfigurasi (`supabase/config.toml`).
+- [x] File konfigurasi lingkungan (`.env.local.example`, `.env.test`) tersedia.
+- [x] Utilitas Supabase client (`src/lib/supabase/client.ts`, `server.ts`, `middleware.ts`) dibuat dengan `@supabase/ssr`.
+- [x] Baseline migration dapat dijalankan tanpa error di Supabase (`20250101000000_initial_schema.sql`).
+- [x] Build Next.js (`npm run build`) dan linting (`npm run lint`) sukses.
 
 ---
 
@@ -117,3 +117,4 @@ Dokumen ini menjadi acuan verifikasi kelayakan setiap fase pengembangan sebelum 
 - [ ] Storage bucket dan kebijakan RLS produksi aktif.
 - [ ] Konfigurasi Auth redirect URLs dan email templates terverifikasi.
 - [ ] Domain kustom / URL Vercel berfungsi dengan performa optimal.
+

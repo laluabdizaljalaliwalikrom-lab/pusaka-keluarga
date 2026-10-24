@@ -139,3 +139,4 @@ $$;
 - **Browser Client**: HANYA menggunakan `NEXT_PUBLIC_SUPABASE_URL` dan `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Publishable Key).
 - **Service Role Key**: TIDAK PERNAH dikirim ke peramban. Jika diperlukan untuk operasi internal migrasi atau cron job, hanya disimpan di environment variable server terisolasi (`SUPABASE_SERVICE_ROLE_KEY`).
 - **Validasi Server-Side**: Semua Route Handlers memeriksa sesi aktif melalui `@supabase/ssr` sebelum memproses data sensitif.
+

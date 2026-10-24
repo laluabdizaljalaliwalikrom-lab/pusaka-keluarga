@@ -167,3 +167,4 @@ Sistem menerapkan **Subgraph Traversal Dinamis**:
 2. Sistem memanggil RPC `get_family_subgraph(p_person_id UUID, p_ancestor_depth INT, p_descendant_depth INT)`.
 3. Default kedalaman dibatasi: Leluhur $\le 4$ generasi, Keturunan $\le 2$ generasi.
 4. Nodus di peramban memiliki tombol expand (+) yang secara asinkron mengambil cabang berikutnya tanpa memuat ulang graf.
+
