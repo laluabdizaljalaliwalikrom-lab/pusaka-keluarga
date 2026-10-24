@@ -51,14 +51,14 @@ Dokumen ini menjadi acuan verifikasi kelayakan setiap fase pengembangan sebelum 
 ---
 
 ### Fase 4 — CRUD Individu, Nama Alternatif, Relasi, Klaim, dan Sumber
-- [ ] Operasi CRUD profil individu berfungsi dengan validasi Zod.
-- [ ] Penambahan dan pencarian nama alternatif (`person_names`) berfungsi.
-- [ ] Pembuatan relasi orang tua-anak dengan penanganan tipe relasi (`biological`, `adopted`, dsb).
-- [ ] Pembuatan serikat pasangan (`unions`) dan pencatatan anak terikat pernikahan.
-- [ ] Modul pencatatan klaim fakta (`claims`) dan penautan bukti sumber (`sources`, `claim_sources`).
-- [ ] Representasi tanggal perkiraan/historis tersimpan akurat.
-- [ ] Deteksi potensi individu duplikat bekerja berdasarkan kemiripan nama dan rentang tahun.
-- [ ] Pengujian unit/integrasi untuk fitur domain CRUD lolos.
+- [x] Operasi CRUD profil individu berfungsi dengan validasi Zod.
+- [x] Penambahan dan pencarian nama alternatif (`person_names`) berfungsi.
+- [x] Pembuatan relasi orang tua-anak dengan penanganan tipe relasi (`biological`, `adopted`, dsb).
+- [x] Pembuatan serikat pasangan (`unions`) dan pencatatan anak terikat pernikahan.
+- [x] Modul pencatatan klaim fakta (`claims`) dan penautan bukti sumber (`sources`, `claim_sources`).
+- [x] Representasi tanggal perkiraan/historis tersimpan akurat.
+- [x] Deteksi potensi individu duplikat bekerja berdasarkan kemiripan nama (ejaan lama Nusantara Van Ophuijsen/Suwandi ke EYD) dan rentang tahun.
+- [x] Pengujian unit/integrasi untuk fitur domain CRUD lolos (45/45 tests passing).
 
 ---
 

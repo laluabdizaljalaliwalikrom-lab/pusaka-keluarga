@@ -38,6 +38,7 @@ export const parentChildRelationSchema = z.object({
   family_id: z.string().uuid(),
   parent_id: z.string().uuid("ID orang tua tidak valid"),
   child_id: z.string().uuid("ID anak tidak valid"),
+  union_id: z.string().uuid().optional().nullable(),
   relationship_type: z.enum([
     "biological",
     "adopted",

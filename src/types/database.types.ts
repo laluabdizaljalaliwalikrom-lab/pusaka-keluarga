@@ -51,6 +51,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       families: {
         Row: {
@@ -86,6 +87,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       family_memberships: {
         Row: {
@@ -118,6 +120,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       persons: {
         Row: {
@@ -195,6 +198,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       person_names: {
         Row: {
@@ -221,6 +225,7 @@ export interface Database {
           notes?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       places: {
         Row: {
@@ -247,6 +252,7 @@ export interface Database {
           longitude?: number | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       unions: {
         Row: {
@@ -303,6 +309,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       union_participants: {
         Row: {
@@ -329,6 +336,7 @@ export interface Database {
           order_index?: number;
           created_at?: string;
         };
+        Relationships: [];
       };
       parent_child_relationships: {
         Row: {
@@ -364,6 +372,7 @@ export interface Database {
           notes?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       sources: {
         Row: {
@@ -408,6 +417,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       claims: {
         Row: {
@@ -449,6 +459,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       claim_sources: {
         Row: {
@@ -475,6 +486,7 @@ export interface Database {
           evidence_quality?: EvidenceQuality;
           created_at?: string;
         };
+        Relationships: [];
       };
       media: {
         Row: {
@@ -519,6 +531,7 @@ export interface Database {
           uploaded_by?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       events: {
         Row: {
@@ -560,6 +573,7 @@ export interface Database {
           description?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       event_persons: {
         Row: {
@@ -583,6 +597,7 @@ export interface Database {
           role_in_event?: string;
           created_at?: string;
         };
+        Relationships: [];
       };
       change_proposals: {
         Row: {
@@ -636,6 +651,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       audit_logs: {
         Row: {
@@ -674,7 +690,11 @@ export interface Database {
           change_summary?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
+    };
+    Views: {
+      [_ in never]: never;
     };
     Functions: {
       fn_check_parent_child_cycle: {
@@ -762,6 +782,24 @@ export interface Database {
         };
         Returns: boolean;
       };
+    };
+    Enums: {
+      family_role_type: FamilyRole;
+      membership_status_type: MembershipStatus;
+      gender_type: Gender;
+      date_accuracy_type: DateAccuracy;
+      name_category_type: NameType;
+      union_category_type: UnionType;
+      union_status_type: UnionStatus;
+      relationship_category_type: RelationshipType;
+      confidence_type: RelationshipConfidence;
+      claim_status_type: ClaimStatus;
+      evidence_quality_type: EvidenceQuality;
+      proposal_status_type: ProposalStatus;
+      audit_operation_type: AuditOperation;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
     };
   };
 }
