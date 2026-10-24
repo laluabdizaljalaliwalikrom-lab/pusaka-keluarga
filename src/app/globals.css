@@ -1,8 +1,8 @@
+@import "@xyflow/react/dist/style.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import "@xyflow/react/dist/style.css";
 
 :root {
   --background: #fdfbf7;
@@ -41,4 +41,3 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #a18072;
 }
-

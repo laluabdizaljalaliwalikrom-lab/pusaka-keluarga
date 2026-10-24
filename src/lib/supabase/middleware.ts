@@ -8,6 +8,56 @@ interface CookieToSet {
   options?: Parameters<NextResponse["cookies"]["set"]>[2];
 }
 
+/**
+ * Validasi lokal token JWT tanpa round-trip HTTPS ke server Supabase Cloud.
+ * Membaca payload JWT langsung dari cookie sesi (0.01ms vs 600-1000ms network lag).
+ */
+function checkLocalTokenValidity(request: NextRequest): { isValid: boolean; expiresSoon: boolean } {
+  const allCookies = request.cookies.getAll();
+  const authCookie = allCookies.find(
+    (c) => c.name.includes("-auth-token") && Boolean(c.value)
+  );
+
+  if (!authCookie) return { isValid: false, expiresSoon: false };
+
+  try {
+    let rawValue = authCookie.value;
+    if (rawValue.startsWith("base64-")) {
+      rawValue = Buffer.from(rawValue.slice(7), "base64").toString("utf-8");
+    }
+
+    let parsed: any;
+    try {
+      parsed = JSON.parse(rawValue);
+    } catch {
+      return { isValid: false, expiresSoon: false };
+    }
+
+    const accessToken = parsed.access_token || (Array.isArray(parsed) ? parsed[0] : null);
+    if (!accessToken || typeof accessToken !== "string") return { isValid: false, expiresSoon: false };
+
+    const parts = accessToken.split(".");
+    if (parts.length !== 3) return { isValid: false, expiresSoon: false };
+
+    const payload = JSON.parse(Buffer.from(parts[1], "base64url").toString("utf-8"));
+    const now = Math.floor(Date.now() / 1000);
+
+    // Masih berlaku lebih dari 60 detik -> Sangat valid, tidak perlu refresh
+    if (payload.exp && payload.exp > now + 60) {
+      return { isValid: true, expiresSoon: false };
+    }
+
+    // Masih berlaku tapi akan kedaluwarsa dalam 60 detik -> Perlu refresh di background
+    if (payload.exp && payload.exp > now) {
+      return { isValid: true, expiresSoon: true };
+    }
+  } catch {
+    // Abaikan jika format token berbeda, serahkan ke verifikasi jaringan
+  }
+
+  return { isValid: false, expiresSoon: true };
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -28,34 +78,40 @@ export async function updateSession(request: NextRequest) {
     pathname.startsWith("/anggota") ||
     pathname.startsWith("/pengaturan");
 
-  // Jalur cepat: Jika bukan rute auth maupun terproteksi, langsung lewat tanpa network call (0ms)
+  // 1. Jalur super cepat: Jika bukan rute auth maupun terproteksi, langsung lewat (0ms)
   if (!isAuthRoute && !isProtectedRoute) {
     return supabaseResponse;
   }
 
-  // Cek apakah ada cookie sesi Supabase
-  const allCookies = request.cookies.getAll();
-  const hasAuthCookie = allCookies.some(
-    (c) => c.name.includes("-auth-token") && Boolean(c.value)
-  );
+  // 2. Evaluasi token JWT lokal di memori (0.01ms)
+  const tokenState = checkLocalTokenValidity(request);
 
-  // Optimasi Cepat (Zero-Network Bypass):
-  // Jika pengguna tidak punya cookie auth:
-  if (!hasAuthCookie) {
-    // Ke rute terproteksi -> langsung redirect ke login secara lokal (0ms)
+  // Kasus A: Token JWT terbukti valid & aktif (navigasi sat set tanpa internet)
+  if (tokenState.isValid && !tokenState.expiresSoon) {
+    if (isAuthRoute) {
+      // Pengguna sudah login mencoba buka /login -> arahkan ke dashboard
+      const url = request.nextUrl.clone();
+      url.pathname = "/dashboard";
+      return NextResponse.redirect(url);
+    }
+    // Rute terproteksi langsung diizinkan seketika (0ms)
+    return supabaseResponse;
+  }
+
+  // Kasus B: Tidak ada token sama sekali
+  if (!tokenState.isValid && !tokenState.expiresSoon) {
     if (isProtectedRoute) {
       const url = request.nextUrl.clone();
       url.pathname = "/login";
       url.searchParams.set("redirectedFrom", pathname);
       return NextResponse.redirect(url);
     }
-    // Ke rute login/register -> langsung sajikan halaman tanpa memanggil internet (0ms)
     if (isAuthRoute) {
       return supabaseResponse;
     }
   }
 
-  // Hanya verifikasi ke cloud Supabase jika ada cookie sesi aktif
+  // Kasus C: Token mendekati kedaluwarsa atau perlu disegarkan -> panggil Supabase SSR
   try {
     const supabase = createServerClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
