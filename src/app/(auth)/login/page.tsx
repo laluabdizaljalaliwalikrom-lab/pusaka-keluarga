@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogIn, AlertCircle } from "lucide-react";
+import { LogIn, AlertCircle, Mail, Lock } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
@@ -48,22 +48,22 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-pusaka-50 via-background to-background">
-      <div className="max-w-md w-full bg-white rounded-3xl border border-pusaka-200/80 p-8 shadow-sm space-y-6">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-whiten">
+      <div className="max-w-md w-full bg-white rounded-xl border border-stroke p-6 sm:p-8 shadow-default space-y-6">
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-pusaka-800 text-white font-bold text-xl flex items-center justify-center mx-auto shadow-sm">
+          <div className="w-11 h-11 rounded-xl bg-primary text-white font-bold text-lg flex items-center justify-center mx-auto shadow-xs">
             PK
           </div>
-          <h1 className="text-2xl font-extrabold text-pusaka-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight">
             Masuk ke Pusaka Keluarga
           </h1>
-          <p className="text-xs text-pusaka-600">
-            Akses silsilah trah dan arsip keluarga besar Anda
+          <p className="text-xs text-slate-500">
+            Akses silsilah trah dan arsip dokumen keluarga besar
           </p>
         </div>
 
         {errorMessage && (
-          <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 flex items-start space-x-2.5 text-xs">
+          <div className="p-3.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 flex items-start gap-2.5 text-xs">
             <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
             <span>{errorMessage}</span>
           </div>
@@ -71,50 +71,56 @@ export default function LoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-pusaka-900 mb-1">Alamat Email</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="nama@email.com"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-pusaka-200 focus:outline-none focus:ring-2 focus:ring-pusaka-800/20 focus:border-pusaka-800"
-            />
+            <label className="block font-medium text-slate-700 mb-1.5">Alamat Email</label>
+            <div className="relative">
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="nama@email.com"
+                className="w-full rounded-lg border border-stroke bg-transparent py-2.5 pl-10 pr-4 text-xs text-slate-800 outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
+              />
+              <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            </div>
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="font-semibold text-pusaka-900">Kata Sandi</label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="font-medium text-slate-700">Kata Sandi</label>
               <Link
                 href="/forgot-password"
-                className="text-[11px] text-pusaka-600 hover:text-pusaka-900 underline"
+                className="text-[11px] text-primary hover:underline font-semibold"
               >
                 Lupa kata sandi?
               </Link>
             </div>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-pusaka-200 focus:outline-none focus:ring-2 focus:ring-pusaka-800/20 focus:border-pusaka-800"
-            />
+            <div className="relative">
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full rounded-lg border border-stroke bg-transparent py-2.5 pl-10 pr-4 text-xs text-slate-800 outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
+              />
+              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            </div>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-pusaka-800 hover:bg-pusaka-900 text-white font-bold shadow transition-all flex items-center justify-center space-x-2 text-xs disabled:opacity-60 cursor-pointer"
+            className="w-full py-2.5 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold shadow-xs transition-colors flex items-center justify-center gap-2 text-xs disabled:opacity-60 cursor-pointer"
           >
             <LogIn className="w-4 h-4" />
-            <span>{loading ? "Memproses Masuk..." : "Masuk ke Silsilah"}</span>
+            <span>{loading ? "Memproses Masuk..." : "Masuk ke Ruang Trah"}</span>
           </button>
         </form>
 
-        <div className="pt-4 border-t border-pusaka-100 text-center text-xs text-pusaka-600">
+        <div className="pt-4 border-t border-stroke text-center text-xs text-slate-500">
           Belum terdaftar dalam ruang keluarga?{" "}
-          <Link href="/register" className="font-bold text-pusaka-800 hover:underline">
+          <Link href="/register" className="font-semibold text-primary hover:underline">
             Daftar Sekarang
           </Link>
         </div>

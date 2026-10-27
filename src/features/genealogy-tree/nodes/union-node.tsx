@@ -26,7 +26,7 @@ export const UnionNode = memo(({ data }: { data: UnionNodeData }) => {
       </div>
 
       {data.year && (
-        <span className="text-[9px] font-bold text-pusaka-600 bg-white/90 px-1 rounded shadow-xs mt-0.5">
+        <span className="text-[9px] font-bold text-slate-600 bg-white/95 border border-slate-200 px-1.5 py-0.5 rounded shadow-xs mt-0.5">
           {data.year}
         </span>
       )}

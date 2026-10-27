@@ -59,15 +59,20 @@ const SAMPLE_EXPORT_DATA: FamilyBackupPayload = {
       relationship_type: "biological",
       confidence: "verified",
     },
+    {
+      id: "r2",
+      parent_id: "b0000002",
+      child_id: "b0000004",
+      relationship_type: "biological",
+      confidence: "verified",
+    },
   ],
   unions: [
     {
       id: "u1",
-      start_date_year: 1912,
-      status: "widowed",
       husband_id: "b0000001",
       wife_id: "b0000002",
-      children_ids: ["b0000004"],
+      status: "married",
     },
   ],
   sources: [],
@@ -157,49 +162,48 @@ export default function PengaturanPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-extrabold text-pusaka-900 tracking-tight flex items-center space-x-2">
-          <Settings className="w-6 h-6 text-pusaka-800" />
-          <span>Pengaturan & Pemulihan Keluarga</span>
+        <h1 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight">
+          Pengaturan Trah & Manajemen Data
         </h1>
-        <p className="text-xs text-pusaka-600 mt-1">
-          Konfigurasi ruang keluarga, ekspor data silsilah, pemulihan cadangan, dan penggabungan profil
+        <p className="text-xs text-slate-500 mt-0.5">
+          Konfigurasi ruang keluarga, ekspor backup silsilah, impor GEDCOM, dan deduplikasi profil
         </p>
       </div>
 
       {/* 1. Pengaturan Profil Keluarga */}
-      <div className="bg-white rounded-3xl border border-pusaka-200/80 p-6 md:p-8 shadow-sm space-y-4">
-        <h2 className="text-base font-bold text-pusaka-900 border-b border-pusaka-100 pb-3">
+      <div className="rounded-xl border border-stroke bg-white p-6 shadow-default space-y-4">
+        <h2 className="text-sm font-bold text-slate-800 border-b border-stroke pb-3">
           Informasi & Privasi Ruang Silsilah
         </h2>
 
         <div className="space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-pusaka-800 mb-1">Nama Trah / Keluarga Besar</label>
+            <label className="block font-medium text-slate-700 mb-1">Nama Trah / Keluarga Besar</label>
             <input
               type="text"
               value={familyName}
               onChange={(e) => setFamilyName(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-pusaka-200 focus:outline-none"
+              className="w-full px-3.5 py-2.5 rounded-lg border border-stroke bg-transparent text-slate-800 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
 
           <div>
-            <label className="block font-semibold text-pusaka-800 mb-1">Deskripsi Singkat</label>
+            <label className="block font-medium text-slate-700 mb-1">Deskripsi Singkat</label>
             <textarea
               rows={2}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-pusaka-200 focus:outline-none"
+              className="w-full px-3.5 py-2.5 rounded-lg border border-stroke bg-transparent text-slate-800 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
 
-          <div className="p-4 rounded-xl border border-pusaka-200 bg-pusaka-50/50 flex items-center justify-between">
+          <div className="p-4 rounded-lg border border-stroke bg-slate-50 flex items-center justify-between">
             <div>
-              <span className="font-bold text-pusaka-900 block">Privasi Ruang Keluarga</span>
-              <span className="text-pusaka-600 text-[11px]">
+              <span className="font-bold text-slate-800 block text-xs">Privasi Ruang Keluarga</span>
+              <span className="text-slate-500 text-[11px]">
                 Jika privat, hanya anggota yang diundang yang dapat mengakses pohon dan direktori.
               </span>
             </div>
@@ -210,46 +214,46 @@ export default function PengaturanPage() {
                 onChange={(e) => setIsPrivate(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-pusaka-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-pusaka-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pusaka-800"></div>
+              <div className="w-10 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
             </label>
           </div>
         </div>
       </div>
 
       {/* 2. Ekspor Silsilah */}
-      <div className="bg-white rounded-3xl border border-pusaka-200/80 p-6 md:p-8 shadow-sm space-y-4">
-        <h2 className="text-base font-bold text-pusaka-900 border-b border-pusaka-100 pb-3 flex items-center space-x-2">
-          <Download className="w-5 h-5 text-pusaka-800" />
-          <span>Ekspor Data Silsilah (Backup)</span>
+      <div className="rounded-xl border border-stroke bg-white p-6 shadow-default space-y-4">
+        <h2 className="text-sm font-bold text-slate-800 border-b border-stroke pb-3 flex items-center gap-2">
+          <Download className="w-4 h-4 text-primary" />
+          <span>Ekspor Data Silsilah (Pencadangan / Backup)</span>
         </h2>
-        <p className="text-xs text-pusaka-600 leading-relaxed">
+        <p className="text-xs text-slate-600 leading-relaxed">
           Unduh salinan lengkap silsilah keluarga besar Anda. Tersedia format JSON terstruktur untuk
-          pemulihan penuh sistem, atau format GEDCOM 5.5.1 untuk integrasi software genealogis internasional.
+          pemulihan penuh sistem, atau format standar GEDCOM 5.5.1 untuk integrasi software genealogis internasional.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
           <button
             onClick={handleExportJson}
-            className="p-4 rounded-2xl border border-pusaka-200 hover:border-pusaka-800/60 bg-pusaka-50/50 hover:bg-pusaka-100/50 text-left transition-all space-y-1.5"
+            className="p-4 rounded-xl border border-stroke hover:border-primary bg-white hover:bg-slate-50 text-left transition-colors space-y-1.5 shadow-xs cursor-pointer group"
           >
-            <div className="flex items-center space-x-2 text-pusaka-900 font-bold text-xs">
-              <FileText className="w-4 h-4 text-pusaka-700" />
-              <span>Ekspor Backup JSON</span>
+            <div className="flex items-center gap-2 text-slate-900 font-bold text-xs group-hover:text-primary transition-colors">
+              <FileText className="w-4 h-4 text-primary" />
+              <span>Ekspor Cadangan JSON</span>
             </div>
-            <p className="text-[11px] text-pusaka-600 leading-normal">
-              Cadangan komprehensif mencakup individu, nama alternatif, klaim bukti, dan catatan tempat.
+            <p className="text-[11px] text-slate-500 leading-normal">
+              Cadangan komprehensif mencakup individu, relasi, klaim bukti sumber, dan catatan metadata lengkap.
             </p>
           </button>
 
           <button
             onClick={handleExportGedcom}
-            className="p-4 rounded-2xl border border-pusaka-200 hover:border-pusaka-800/60 bg-pusaka-50/50 hover:bg-pusaka-100/50 text-left transition-all space-y-1.5"
+            className="p-4 rounded-xl border border-stroke hover:border-primary bg-white hover:bg-slate-50 text-left transition-colors space-y-1.5 shadow-xs cursor-pointer group"
           >
-            <div className="flex items-center space-x-2 text-pusaka-900 font-bold text-xs">
-              <Shield className="w-4 h-4 text-pusaka-700" />
-              <span>Ekspor GEDCOM 5.5.1</span>
+            <div className="flex items-center gap-2 text-slate-900 font-bold text-xs group-hover:text-primary transition-colors">
+              <Shield className="w-4 h-4 text-primary" />
+              <span>Ekspor Standar GEDCOM 5.5.1</span>
             </div>
-            <p className="text-[11px] text-pusaka-600 leading-normal">
+            <p className="text-[11px] text-slate-500 leading-normal">
               Format standar pertukaran silsilah dunia (FamilySearch, Gramps, MyHeritage, RootsMagic).
             </p>
           </button>
@@ -257,23 +261,23 @@ export default function PengaturanPage() {
       </div>
 
       {/* 3. Impor & Pemulihan Cadangan */}
-      <div className="bg-white rounded-3xl border border-pusaka-200/80 p-6 md:p-8 shadow-sm space-y-4">
-        <h2 className="text-base font-bold text-pusaka-900 border-b border-pusaka-100 pb-3 flex items-center space-x-2">
-          <Upload className="w-5 h-5 text-pusaka-800" />
+      <div className="rounded-xl border border-stroke bg-white p-6 shadow-default space-y-4">
+        <h2 className="text-sm font-bold text-slate-800 border-b border-stroke pb-3 flex items-center gap-2">
+          <Upload className="w-4 h-4 text-primary" />
           <span>Impor Data & Pemulihan Silsilah</span>
         </h2>
-        <p className="text-xs text-pusaka-600 leading-relaxed">
+        <p className="text-xs text-slate-600 leading-relaxed">
           Unggah berkas cadangan JSON atau GEDCOM (.ged). Sistem akan memvalidasi keutuhan skema dan
           menampilkan pratinjau sebelum perubahan diterapkan.
         </p>
 
-        <div className="pt-2">
-          <label className="border-2 border-dashed border-pusaka-300 hover:border-pusaka-800 rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer transition-colors bg-pusaka-50/40">
-            <Upload className="w-8 h-8 text-pusaka-600 mb-2" />
-            <span className="text-xs font-bold text-pusaka-900">
+        <div className="pt-1">
+          <label className="border-2 border-dashed border-stroke hover:border-primary rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-colors bg-slate-50/50">
+            <Upload className="w-8 h-8 text-primary mb-2" />
+            <span className="text-xs font-bold text-slate-800">
               Pilih Berkas JSON atau GEDCOM (.ged)
             </span>
-            <span className="text-[10px] text-pusaka-500 mt-1">Ukuran maksimal 25 MB</span>
+            <span className="text-[10px] text-slate-400 mt-1">Ukuran maksimal 25 MB</span>
             <input
               type="file"
               accept=".json,.ged,.gedcom"
@@ -283,45 +287,45 @@ export default function PengaturanPage() {
           </label>
         </div>
 
-        {/* Import Preview Modal / Box */}
+        {/* Import Preview Box */}
         {importSummary && (
-          <div className="mt-4 p-5 rounded-2xl border border-pusaka-200 bg-white space-y-3">
+          <div className="mt-4 p-5 rounded-xl border border-stroke bg-white space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-pusaka-900">
+              <span className="text-xs font-bold text-slate-800">
                 Pratinjau Berkas ({importType.toUpperCase()})
               </span>
               {importSummary.valid ? (
-                <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
-                  Skema Valid
+                <span className="px-2.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
+                  Format Valid
                 </span>
               ) : (
-                <span className="px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 text-[10px] font-bold">
+                <span className="px-2.5 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-bold">
                   Format Bermasalah
                 </span>
               )}
             </div>
 
             {importSummary.valid ? (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs bg-pusaka-50/70 p-3 rounded-xl">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs bg-slate-50 p-3 rounded-lg border border-stroke">
                 <div>
-                  <span className="text-[10px] text-pusaka-500 block">Individu</span>
-                  <span className="font-bold text-pusaka-900">{importSummary.totalPersons} Orang</span>
+                  <span className="text-[10px] text-slate-400 block">Individu</span>
+                  <span className="font-bold text-slate-800">{importSummary.totalPersons} Orang</span>
                 </div>
                 <div>
-                  <span className="text-[10px] text-pusaka-500 block">Relasi</span>
-                  <span className="font-bold text-pusaka-900">{importSummary.totalRelationships} Tautan</span>
+                  <span className="text-[10px] text-slate-400 block">Relasi</span>
+                  <span className="font-bold text-slate-800">{importSummary.totalRelationships} Tautan</span>
                 </div>
                 <div>
-                  <span className="text-[10px] text-pusaka-500 block">Serikat Pasangan</span>
-                  <span className="font-bold text-pusaka-900">{importSummary.totalUnions} Pernikahan</span>
+                  <span className="text-[10px] text-slate-400 block">Serikat Pasangan</span>
+                  <span className="font-bold text-slate-800">{importSummary.totalUnions} Pernikahan</span>
                 </div>
                 <div>
-                  <span className="text-[10px] text-pusaka-500 block">Sumber Dokumen</span>
-                  <span className="font-bold text-pusaka-900">{importSummary.totalSources} Dokumen</span>
+                  <span className="text-[10px] text-slate-400 block">Sumber Dokumen</span>
+                  <span className="font-bold text-slate-800">{importSummary.totalSources} Dokumen</span>
                 </div>
               </div>
             ) : (
-              <div className="text-xs text-rose-700 bg-rose-50 p-3 rounded-xl border border-rose-200">
+              <div className="text-xs text-rose-700 bg-rose-50 p-3 rounded-lg border border-rose-200">
                 {importSummary.errors?.join(", ")}
               </div>
             )}
@@ -329,14 +333,14 @@ export default function PengaturanPage() {
             {importSummary.valid && !isRestored && (
               <button
                 onClick={handleConfirmRestore}
-                className="w-full py-2.5 rounded-xl bg-pusaka-800 hover:bg-pusaka-900 text-white font-bold text-xs shadow-sm transition-all"
+                className="w-full py-2.5 rounded-lg bg-primary hover:bg-primary-hover text-white font-bold text-xs shadow-xs transition-colors"
               >
                 Konfirmasi & Mulai Pemulihan Data
               </button>
             )}
 
             {isRestored && (
-              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 font-semibold flex items-center space-x-2">
+              <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-semibold flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                 <span>Pemulihan data berhasil! Seluruh record telah terverifikasi dan siap dijelajahi.</span>
               </div>
@@ -346,72 +350,65 @@ export default function PengaturanPage() {
       </div>
 
       {/* 4. Penggabungan Profil Duplikat (Profile Merging) */}
-      <div className="bg-white rounded-3xl border border-pusaka-200/80 p-6 md:p-8 shadow-sm space-y-4">
-        <h2 className="text-base font-bold text-pusaka-900 border-b border-pusaka-100 pb-3 flex items-center space-x-2">
-          <GitMerge className="w-5 h-5 text-pusaka-800" />
+      <div className="rounded-xl border border-stroke bg-white p-6 shadow-default space-y-4">
+        <h2 className="text-sm font-bold text-slate-800 border-b border-stroke pb-3 flex items-center gap-2">
+          <GitMerge className="w-4 h-4 text-primary" />
           <span>Penggabungan Profil Duplikat (Profile Merging)</span>
         </h2>
-        <p className="text-xs text-pusaka-600 leading-relaxed">
-          Jika ditemukan dua entri profil yang merujuk pada orang yang sama, Anda dapat menggabungkannya.
-          Seluruh nama alias, hubungan orang tua-anak, pasangan, foto, dan klaim akan dipindahkan ke profil target.
-          Operasi ini transaksional dan tercatat dalam audit log.
+        <p className="text-xs text-slate-600 leading-relaxed">
+          Gunakan utilitas ini jika ditemukan individu yang sama dicatat dua kali secara tidak sengaja.
+          Sistem akan memigrasikan seluruh relasi, klaim bukti, dan nama alias ke profil target secara transaksional.
         </p>
 
-        <form onSubmit={handleMergeProfiles} className="space-y-4 text-xs pt-2">
+        <form onSubmit={handleMergeProfiles} className="space-y-4 text-xs">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block font-semibold text-pusaka-800 mb-1">
-                Profil Sumber (Akan Dihapus / Diarsip)
+              <label className="block font-medium text-slate-700 mb-1">
+                Profil Duplikat (Akan Dihapus / Sumber)
               </label>
-              <select
+              <input
+                type="text"
                 value={sourcePerson}
                 onChange={(e) => setSourcePerson(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-pusaka-200 bg-white"
-              >
-                <option value="">-- Pilih Profil Sumber --</option>
-                <option value="Bambang Soedirjo (Duplikat)">Bambang Soedirjo (Duplikat)</option>
-                <option value="B. Sudiryo (Catatan Lama)">B. Sudiryo (Catatan Lama)</option>
-              </select>
+                placeholder="Misal: Bambang Sudirjo (versi salah ketik)"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-stroke bg-transparent text-slate-800 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+              />
             </div>
 
             <div>
-              <label className="block font-semibold text-pusaka-800 mb-1">
-                Profil Target (Profil Utama yang Dipertahankan)
+              <label className="block font-medium text-slate-700 mb-1">
+                Profil Utama (Target yang Dipertahankan)
               </label>
-              <select
+              <input
+                type="text"
                 value={targetPerson}
                 onChange={(e) => setTargetPerson(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-pusaka-200 bg-white"
-              >
-                <option value="">-- Pilih Profil Target --</option>
-                <option value="Bambang Soedirjo (1915-1988)">Bambang Soedirjo (1915-1988)</option>
-                <option value="Raden Mas Kartosoedirjo (1885-1952)">Raden Mas Kartosoedirjo (1885-1952)</option>
-              </select>
+                placeholder="Misal: Bambang Soedirjo (profil resmi)"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-stroke bg-transparent text-slate-800 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+              />
             </div>
           </div>
+
+          {mergeStatus && (
+            <div
+              className={`p-3 rounded-lg text-xs font-medium ${
+                mergeStatus.startsWith("Sukses")
+                  ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                  : "bg-rose-50 text-rose-800 border border-rose-200"
+              }`}
+            >
+              {mergeStatus}
+            </div>
+          )}
 
           <button
             type="submit"
-            className="px-5 py-2.5 rounded-xl bg-amber-700 hover:bg-amber-800 text-white font-bold text-xs shadow-sm transition-all inline-flex items-center space-x-1.5"
+            className="px-4 py-2.5 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold text-xs transition-colors shadow-xs"
           >
-            <GitMerge className="w-4 h-4" />
-            <span>Jalankan Penggabungan Profil</span>
+            Jalankan Penggabungan Profil
           </button>
         </form>
-
-        {mergeStatus && (
-          <div
-            className={`p-3.5 rounded-xl text-xs leading-relaxed border ${
-              mergeStatus.startsWith("Sukses")
-                ? "bg-emerald-50 border-emerald-200 text-emerald-900"
-                : "bg-rose-50 border-rose-200 text-rose-900"
-            }`}
-          >
-            {mergeStatus}
-          </div>
-        )}
       </div>
     </div>
   );
 }
-

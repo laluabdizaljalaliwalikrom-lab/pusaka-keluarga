@@ -29,7 +29,6 @@ interface ProposalItem {
   proposed_payload: Record<string, any>;
 }
 
-// Mock usulan kontribusi awal tersinkronisasi
 const INITIAL_PROPOSALS: ProposalItem[] = [
   {
     id: "prop-1",
@@ -59,13 +58,13 @@ const INITIAL_PROPOSALS: ProposalItem[] = [
     source_title: "Kutipan Akta Catatan Sipil Surakarta",
     proposed_by_name: "Siti Nurhaliza",
     proposed_by_role: "Editor",
-    created_at: "Kemarin",
+    created_at: "1 hari yang lalu",
     status: "approved",
-    reviewer_notes: "Data cocok dengan arsip gereja dan catatan keluarga.",
+    reviewer_notes: "Disetujui berdasarkan kesesuaian dokumen akta kelahiran 1950.",
     proposed_payload: {
       parent_name: "Raden Hartono",
       child_name: "Budi Santoso",
-      relationship_type: "biological",
+      type: "biological",
     },
   },
 ];
@@ -73,10 +72,8 @@ const INITIAL_PROPOSALS: ProposalItem[] = [
 export default function KontribusiPage() {
   const [proposals, setProposals] = useState<ProposalItem[]>(INITIAL_PROPOSALS);
   const [activeTab, setActiveTab] = useState<"pending" | "approved" | "rejected" | "all">("pending");
-  const [actionModal, setActionModal] = useState<{
-    id: string;
-    type: "approve" | "reject";
-  } | null>(null);
+  const [selectedProposal, setSelectedProposal] = useState<ProposalItem | null>(null);
+  const [reviewAction, setReviewAction] = useState<"approve" | "reject" | null>(null);
   const [notes, setNotes] = useState("");
 
   const filteredProposals = proposals.filter((p) => {
@@ -84,21 +81,24 @@ export default function KontribusiPage() {
     return p.status === activeTab;
   });
 
-  const handleConfirmAction = () => {
-    if (!actionModal) return;
+  const handleConfirmReview = () => {
+    if (!selectedProposal || !reviewAction) return;
+
     setProposals((prev) =>
-      prev.map((p) => {
-        if (p.id === actionModal.id) {
+      prev.map((item) => {
+        if (item.id === selectedProposal.id) {
           return {
-            ...p,
-            status: actionModal.type === "approve" ? "approved" : "rejected",
-            reviewer_notes: notes || (actionModal.type === "approve" ? "Disetujui kurator." : "Ditolak."),
+            ...item,
+            status: reviewAction === "approve" ? "approved" : "rejected",
+            reviewer_notes: notes || (reviewAction === "approve" ? "Disetujui oleh Family Admin" : "Ditolak"),
           };
         }
-        return p;
+        return item;
       })
     );
-    setActionModal(null);
+
+    setSelectedProposal(null);
+    setReviewAction(null);
     setNotes("");
   };
 
@@ -106,100 +106,99 @@ export default function KontribusiPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-extrabold text-pusaka-900 tracking-tight flex items-center space-x-2">
-          <ShieldAlert className="w-6 h-6 text-pusaka-800" />
-          <span>Pusat Usulan Kontribusi & Kurasi</span>
+        <h1 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight">
+          Pusat Review & Kurasi Usulan
         </h1>
-        <p className="text-xs text-pusaka-600 mt-1">
-          Tinjau, setujui, atau tolak perubahan silsilah yang diajukan oleh anggota keluarga
+        <p className="text-xs text-slate-500 mt-0.5">
+          Tinjau usulan penambahan individu atau tautan relasi yang diajukan oleh kontributor keluarga
         </p>
       </div>
 
-      {/* Tabs */}
-      <div className="flex border-b border-pusaka-200 space-x-4 text-xs font-bold">
+      {/* TailAdmin Filter Tabs */}
+      <div className="flex items-center gap-1.5 border-b border-stroke pb-1 text-xs font-semibold">
         <button
           onClick={() => setActiveTab("pending")}
-          className={`pb-3 border-b-2 flex items-center space-x-1.5 transition-all ${
+          className={`px-3 py-2 rounded-lg flex items-center gap-1.5 transition-colors ${
             activeTab === "pending"
-              ? "border-pusaka-800 text-pusaka-900"
-              : "border-transparent text-pusaka-500 hover:text-pusaka-800"
+              ? "bg-amber-50 text-amber-700 border border-amber-200"
+              : "text-slate-500 hover:text-slate-800 hover:bg-slate-100"
           }`}
         >
-          <Clock className="w-4 h-4 text-amber-600" />
+          <Clock className="w-3.5 h-3.5" />
           <span>Menunggu Review ({proposals.filter((p) => p.status === "pending").length})</span>
         </button>
 
         <button
           onClick={() => setActiveTab("approved")}
-          className={`pb-3 border-b-2 flex items-center space-x-1.5 transition-all ${
+          className={`px-3 py-2 rounded-lg flex items-center gap-1.5 transition-colors ${
             activeTab === "approved"
-              ? "border-pusaka-800 text-pusaka-900"
-              : "border-transparent text-pusaka-500 hover:text-pusaka-800"
+              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+              : "text-slate-500 hover:text-slate-800 hover:bg-slate-100"
           }`}
         >
-          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+          <CheckCircle2 className="w-3.5 h-3.5" />
           <span>Disetujui ({proposals.filter((p) => p.status === "approved").length})</span>
         </button>
 
         <button
           onClick={() => setActiveTab("rejected")}
-          className={`pb-3 border-b-2 flex items-center space-x-1.5 transition-all ${
+          className={`px-3 py-2 rounded-lg flex items-center gap-1.5 transition-colors ${
             activeTab === "rejected"
-              ? "border-pusaka-800 text-pusaka-900"
-              : "border-transparent text-pusaka-500 hover:text-pusaka-800"
+              ? "bg-rose-50 text-rose-700 border border-rose-200"
+              : "text-slate-500 hover:text-slate-800 hover:bg-slate-100"
           }`}
         >
-          <XCircle className="w-4 h-4 text-rose-600" />
+          <XCircle className="w-3.5 h-3.5" />
           <span>Ditolak ({proposals.filter((p) => p.status === "rejected").length})</span>
         </button>
 
         <button
           onClick={() => setActiveTab("all")}
-          className={`pb-3 border-b-2 transition-all ${
+          className={`px-3 py-2 rounded-lg transition-colors ${
             activeTab === "all"
-              ? "border-pusaka-800 text-pusaka-900"
-              : "border-transparent text-pusaka-500 hover:text-pusaka-800"
+              ? "bg-slate-100 text-slate-900 border border-stroke"
+              : "text-slate-500 hover:text-slate-800 hover:bg-slate-100"
           }`}
         >
-          Semua Usulan ({proposals.length})
+          Semua ({proposals.length})
         </button>
       </div>
 
       {/* Proposals List */}
       <div className="space-y-4">
         {filteredProposals.length === 0 ? (
-          <div className="p-12 text-center bg-white rounded-2xl border border-pusaka-200 text-xs text-pusaka-500">
-            Tidak ada usulan perubahan pada kategori ini.
+          <div className="p-12 text-center bg-white rounded-xl border border-stroke text-xs text-slate-500">
+            Tidak ada usulan data dalam kategori ini.
           </div>
         ) : (
           filteredProposals.map((proposal) => (
             <div
               key={proposal.id}
-              className="bg-white rounded-2xl border border-pusaka-200/80 p-6 shadow-sm space-y-4"
+              className="rounded-xl border border-stroke bg-white p-5 md:p-6 shadow-default space-y-4"
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-pusaka-100 pb-3">
-                <div className="flex items-center space-x-2">
-                  <span className="px-2.5 py-0.5 rounded-full bg-pusaka-100 text-pusaka-800 text-[10px] font-bold uppercase">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stroke pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-bold uppercase">
                     {proposal.operation} — {proposal.target_table}
                   </span>
-                  <span className="text-xs text-pusaka-500">• {proposal.created_at}</span>
+                  <span className="text-xs text-slate-400">• {proposal.created_at}</span>
                 </div>
 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-2">
                   {proposal.status === "pending" && (
-                    <span className="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 text-[11px] font-bold flex items-center space-x-1">
+                    <span className="px-2.5 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5" />
                       <span>Menunggu Kurasi</span>
                     </span>
                   )}
                   {proposal.status === "approved" && (
-                    <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold flex items-center space-x-1">
+                    <span className="px-2.5 py-0.5 rounded text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>Telah Disetujui</span>
+                      <span>Disetujui</span>
                     </span>
                   )}
                   {proposal.status === "rejected" && (
-                    <span className="px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 text-[11px] font-bold flex items-center space-x-1">
+                    <span className="px-2.5 py-0.5 rounded text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200 flex items-center gap-1">
                       <XCircle className="w-3.5 h-3.5" />
                       <span>Ditolak</span>
                     </span>
@@ -209,108 +208,125 @@ export default function KontribusiPage() {
 
               {/* Proposal Content */}
               <div>
-                <h3 className="text-base font-bold text-pusaka-900">{proposal.target_name}</h3>
-                <p className="text-xs text-pusaka-700 mt-1 leading-relaxed">
-                  <strong>Alasan / Bukti:</strong> {proposal.justification}
+                <h3 className="text-sm md:text-base font-bold text-slate-900">{proposal.target_name}</h3>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                  <strong className="text-slate-800">Alasan / Bukti:</strong> {proposal.justification}
                 </p>
                 {proposal.source_title && (
-                  <p className="text-xs text-pusaka-600 mt-0.5">
+                  <p className="text-xs text-slate-500 mt-0.5">
                     <strong>Rujukan Sumber:</strong> {proposal.source_title}
                   </p>
                 )}
               </div>
 
-              {/* Proposer Info & Reviewer Notes */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-pusaka-100 text-xs">
-                <div className="flex items-center space-x-2 text-pusaka-600">
-                  <User className="w-4 h-4 text-pusaka-500" />
-                  <span>Diajukan oleh:</span>
-                  <span className="font-bold text-pusaka-900">{proposal.proposed_by_name}</span>
-                  <span className="px-1.5 py-0.2 bg-pusaka-100 text-pusaka-700 text-[10px] rounded">
-                    {proposal.proposed_by_role}
-                  </span>
-                </div>
-
-                {/* Curator Actions */}
-                {proposal.status === "pending" && (
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => setActionModal({ id: proposal.id, type: "reject" })}
-                      className="px-3.5 py-1.5 rounded-xl border border-rose-300 text-rose-700 hover:bg-rose-50 font-semibold text-xs transition-colors flex items-center space-x-1"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                      <span>Tolak Usulan</span>
-                    </button>
-                    <button
-                      onClick={() => setActionModal({ id: proposal.id, type: "approve" })}
-                      className="px-4 py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm transition-colors flex items-center space-x-1"
-                    >
-                      <Check className="w-3.5 h-3.5" />
-                      <span>Setujui Usulan</span>
-                    </button>
-                  </div>
-                )}
+              {/* Payload Preview */}
+              <div className="bg-slate-50 rounded-lg p-3 text-xs border border-stroke space-y-1">
+                <span className="font-semibold text-slate-500 block text-[11px]">
+                  Rincian Data yang Diusulkan:
+                </span>
+                <pre className="text-[11px] font-mono text-slate-700 overflow-x-auto">
+                  {JSON.stringify(proposal.proposed_payload, null, 2)}
+                </pre>
               </div>
 
+              {/* Reviewer Notes if already reviewed */}
               {proposal.reviewer_notes && (
-                <div className="p-3 rounded-xl bg-pusaka-50 border border-pusaka-200 text-xs text-pusaka-800">
-                  <span className="font-bold text-[11px] text-pusaka-600 block mb-0.5">
-                    Catatan Kurator / Peninjau:
+                <div className="p-3 rounded-lg bg-emerald-50/50 border border-emerald-100 text-xs text-emerald-800">
+                  <span className="font-semibold block text-[11px] text-emerald-600">
+                    Catatan Reviewer:
                   </span>
                   <p>{proposal.reviewer_notes}</p>
                 </div>
               )}
+
+              {/* Card Footer: Proposer info & Action Buttons */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-stroke text-xs">
+                <div className="flex items-center gap-2 text-slate-500">
+                  <User className="w-4 h-4 text-slate-400" />
+                  <span>
+                    Diusulkan oleh: <strong className="text-slate-800">{proposal.proposed_by_name}</strong> ({proposal.proposed_by_role})
+                  </span>
+                </div>
+
+                {proposal.status === "pending" && (
+                  <div className="flex items-center gap-2 self-end sm:self-auto">
+                    <button
+                      onClick={() => {
+                        setSelectedProposal(proposal);
+                        setReviewAction("reject");
+                      }}
+                      className="px-3 py-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 font-semibold text-xs transition-colors flex items-center gap-1"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                      <span>Tolak Usulan</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setSelectedProposal(proposal);
+                        setReviewAction("approve");
+                      }}
+                      className="px-3.5 py-1.5 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold text-xs transition-colors flex items-center gap-1 shadow-xs"
+                    >
+                      <Check className="w-3.5 h-3.5" />
+                      <span>Setujui & Terapkan</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           ))
         )}
       </div>
 
       {/* Review Confirmation Modal */}
-      {actionModal && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-xl space-y-4">
-            <h3 className="text-base font-bold text-pusaka-900">
-              {actionModal.type === "approve"
-                ? "Konfirmasi Persetujuan Usulan"
-                : "Konfirmasi Penolakan Usulan"}
+      {selectedProposal && reviewAction && (
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl border border-stroke max-w-md w-full p-6 shadow-dropdown space-y-4">
+            <h3 className="text-sm font-bold text-slate-800">
+              {reviewAction === "approve" ? "Konfirmasi Persetujuan Usulan" : "Konfirmasi Penolakan Usulan"}
             </h3>
-            <p className="text-xs text-pusaka-600 leading-relaxed">
-              {actionModal.type === "approve"
-                ? "Perubahan ini akan diterapkan secara permanen ke pohon silsilah keluarga dan dicatat dalam audit log."
-                : "Berikan alasan penolakan yang konstruktif agar kontributor dapat melengkapi bukti sumber."}
+
+            <p className="text-xs text-slate-600 leading-relaxed">
+              {reviewAction === "approve"
+                ? `Usulan "${selectedProposal.target_name}" akan langsung diterapkan ke database trah silsilah.`
+                : `Usulan "${selectedProposal.target_name}" akan ditolak dan dicatat pada riwayat kurasi.`}
             </p>
 
             <div>
-              <label className="block text-xs font-semibold text-pusaka-800 mb-1">
-                Catatan Peninjau / Kurator
+              <label className="block text-xs font-medium text-slate-700 mb-1">
+                Catatan Reviewer (Opsional)
               </label>
               <textarea
                 rows={3}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Catatan verifikasi atau alasan keputusan..."
-                className="w-full px-3 py-2 text-xs rounded-xl border border-pusaka-200 focus:outline-none"
+                placeholder="Berikan alasan atau catatan verifikasi tambahan..."
+                className="w-full p-2.5 rounded-lg border border-stroke bg-transparent text-xs text-slate-800 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               />
             </div>
 
-            <div className="pt-2 flex items-center justify-end space-x-2 text-xs">
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-stroke">
               <button
-                type="button"
-                onClick={() => setActionModal(null)}
-                className="px-4 py-2 rounded-xl border border-pusaka-200 text-pusaka-700"
+                onClick={() => {
+                  setSelectedProposal(null);
+                  setReviewAction(null);
+                  setNotes("");
+                }}
+                className="px-4 py-2 rounded-lg border border-stroke text-slate-700 hover:bg-slate-50 text-xs font-semibold"
               >
                 Batal
               </button>
+
               <button
-                type="button"
-                onClick={handleConfirmAction}
-                className={`px-4 py-2 rounded-xl text-white font-bold ${
-                  actionModal.type === "approve"
-                    ? "bg-emerald-700 hover:bg-emerald-800"
-                    : "bg-rose-700 hover:bg-rose-800"
+                onClick={handleConfirmReview}
+                className={`px-4 py-2 rounded-lg text-white text-xs font-semibold shadow-xs ${
+                  reviewAction === "approve"
+                    ? "bg-primary hover:bg-primary-hover"
+                    : "bg-rose-600 hover:bg-rose-700"
                 }`}
               >
-                {actionModal.type === "approve" ? "Konfirmasi Setuju" : "Konfirmasi Tolak"}
+                {reviewAction === "approve" ? "Terapkan Usulan" : "Tolak Usulan"}
               </button>
             </div>
           </div>
@@ -319,4 +335,3 @@ export default function KontribusiPage() {
     </div>
   );
 }
-

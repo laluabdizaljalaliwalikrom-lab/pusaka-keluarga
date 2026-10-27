@@ -5,28 +5,22 @@
 @tailwind utilities;
 
 :root {
-  --background: #fdfbf7;
-  --foreground: #2d2621;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #191614;
-    --foreground: #ece5df;
-  }
+  --background: #f1f5f9;
+  --foreground: #1e293b;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: #1e293b;
+  background-color: #f1f5f9;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Custom scrollbars */
+/* Crisp Clean Scrollbars */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -34,10 +28,18 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d2bab0;
-  border-radius: 4px;
+  background: #cbd5e1;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a18072;
+  background: #94a3b8;
+}
+
+/* React Flow Canvas clean styles */
+.react-flow__attribution {
+  background: rgba(255, 255, 255, 0.7) !important;
+  padding: 2px 6px !important;
+  font-size: 10px !important;
+  border-radius: 4px !important;
 }

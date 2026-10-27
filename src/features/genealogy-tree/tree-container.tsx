@@ -20,12 +20,12 @@ import {
   ArrowUp,
   ArrowDown,
   Layers,
-  ZoomIn,
-  ZoomOut,
-  Maximize2,
   X,
   ExternalLink,
   GitFork,
+  Calendar,
+  MapPin,
+  ShieldCheck,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -75,7 +75,7 @@ export function TreeContainer({ initialData }: TreeContainerProps) {
   }, [selectedPersonId, data.persons]);
 
   return (
-    <div className="relative w-full h-[78vh] rounded-3xl border border-pusaka-200 bg-pusaka-50/40 overflow-hidden shadow-inner flex flex-col">
+    <div className="relative w-full h-[76vh] rounded-xl border border-stroke bg-white overflow-hidden shadow-default flex flex-col">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -86,26 +86,26 @@ export function TreeContainer({ initialData }: TreeContainerProps) {
         minZoom={0.2}
         maxZoom={1.8}
       >
-        <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#d2bab0" />
-        <Controls className="!bg-white !border-pusaka-200 !shadow-sm !rounded-xl" />
+        <Background variant={BackgroundVariant.Dots} gap={24} size={1.2} color="#CBD5E1" />
+        <Controls className="!bg-white !border-stroke !shadow-card !rounded-lg" />
         <MiniMap
           nodeColor={(n) => {
-            if (n.data?.is_focus) return "#846358";
-            return n.data?.gender === "male" ? "#93c5fd" : "#fbcfe8";
+            if (n.data?.is_focus) return "#3C50E0";
+            return n.data?.gender === "male" ? "#93C5FD" : "#FBCFE8";
           }}
-          className="!bg-white/90 !border-pusaka-200 !rounded-xl !shadow-sm hidden md:block"
+          className="!bg-white/95 !border-stroke !rounded-lg !shadow-card hidden md:block"
         />
 
-        {/* Floating Top Controls Panel */}
-        <Panel position="top-left" className="!m-4 flex flex-wrap items-center gap-2">
+        {/* Floating Top Controls Panel (TailAdmin Segmented Bar) */}
+        <Panel position="top-left" className="!m-4 flex flex-wrap items-center gap-2.5">
           {/* View Mode Toggle */}
-          <div className="bg-white/95 backdrop-blur p-1 rounded-2xl border border-pusaka-200 shadow-sm flex items-center space-x-1">
+          <div className="bg-white/95 backdrop-blur p-1 rounded-lg border border-stroke shadow-card flex items-center gap-1">
             <button
               onClick={() => setViewMode("ancestors")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition-all ${
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-colors ${
                 viewMode === "ancestors"
-                  ? "bg-pusaka-800 text-white shadow-xs"
-                  : "text-pusaka-700 hover:bg-pusaka-100"
+                  ? "bg-primary text-white shadow-xs"
+                  : "text-slate-600 hover:bg-slate-100"
               }`}
             >
               <ArrowUp className="w-3.5 h-3.5" />
@@ -114,10 +114,10 @@ export function TreeContainer({ initialData }: TreeContainerProps) {
 
             <button
               onClick={() => setViewMode("descendants")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition-all ${
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-colors ${
                 viewMode === "descendants"
-                  ? "bg-pusaka-800 text-white shadow-xs"
-                  : "text-pusaka-700 hover:bg-pusaka-100"
+                  ? "bg-primary text-white shadow-xs"
+                  : "text-slate-600 hover:bg-slate-100"
               }`}
             >
               <ArrowDown className="w-3.5 h-3.5" />
@@ -126,10 +126,10 @@ export function TreeContainer({ initialData }: TreeContainerProps) {
 
             <button
               onClick={() => setViewMode("hourglass")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition-all ${
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-colors ${
                 viewMode === "hourglass"
-                  ? "bg-pusaka-800 text-white shadow-xs"
-                  : "text-pusaka-700 hover:bg-pusaka-100"
+                  ? "bg-primary text-white shadow-xs"
+                  : "text-slate-600 hover:bg-slate-100"
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -138,16 +138,16 @@ export function TreeContainer({ initialData }: TreeContainerProps) {
           </div>
 
           {/* Quick Focus Selector */}
-          <div className="bg-white/95 backdrop-blur px-3 py-1.5 rounded-2xl border border-pusaka-200 shadow-sm flex items-center space-x-2">
-            <Compass className="w-3.5 h-3.5 text-pusaka-600" />
+          <div className="bg-white/95 backdrop-blur px-3 py-1.5 rounded-lg border border-stroke shadow-card flex items-center gap-2">
+            <Compass className="w-4 h-4 text-primary" />
             <select
               value={data.focus_person_id}
               onChange={(e) => handleSetFocus(e.target.value)}
-              className="text-xs bg-transparent text-pusaka-900 font-semibold focus:outline-none"
+              className="text-xs bg-transparent text-slate-800 font-semibold focus:outline-none cursor-pointer"
             >
               {data.persons.map((p) => (
                 <option key={p.id} value={p.id}>
-                  Fokus: {p.primary_name} ({p.birth_date_year || "???"})
+                  Pusat: {p.primary_name} ({p.birth_date_year || "???"})
                 </option>
               ))}
             </select>
@@ -155,28 +155,28 @@ export function TreeContainer({ initialData }: TreeContainerProps) {
         </Panel>
       </ReactFlow>
 
-      {/* Selected Person Summary Drawer */}
+      {/* Selected Person Summary Drawer (TailAdmin Clean Drawer) */}
       {selectedPerson && (
-        <div className="absolute right-4 top-4 bottom-4 w-80 bg-white/95 backdrop-blur-md rounded-2xl border border-pusaka-200 shadow-xl p-5 z-30 flex flex-col justify-between animate-in fade-in slide-in-from-right-4 duration-200">
+        <div className="absolute right-4 top-4 bottom-4 w-80 md:w-96 bg-white/95 backdrop-blur-md rounded-xl border border-stroke shadow-dropdown p-5 z-30 flex flex-col justify-between animate-in fade-in slide-in-from-right-4 duration-200">
           <div>
-            <div className="flex items-center justify-between border-b border-pusaka-100 pb-3 mb-3">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-pusaka-500">
-                Detail Individu
+            <div className="flex items-center justify-between border-b border-stroke pb-3 mb-4">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                Detail Profil Silsilah
               </span>
               <button
                 onClick={() => setSelectedPersonId(null)}
-                className="w-6 h-6 rounded-full hover:bg-pusaka-100 flex items-center justify-center text-pusaka-500"
+                className="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="flex items-center space-x-3 mb-4">
+            <div className="flex items-center gap-3.5 mb-5">
               <div
-                className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-base ${
+                className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-base shrink-0 border ${
                   selectedPerson.gender === "male"
-                    ? "bg-blue-100 text-blue-900"
-                    : "bg-rose-100 text-rose-900"
+                    ? "bg-blue-50 text-blue-700 border-blue-200"
+                    : "bg-pink-50 text-pink-700 border-pink-200"
                 }`}
               >
                 {selectedPerson.primary_name
@@ -186,55 +186,61 @@ export function TreeContainer({ initialData }: TreeContainerProps) {
                   .join("")}
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-bold text-pusaka-900 leading-snug">
+                <h4 className="text-sm font-bold text-slate-900 leading-tight truncate">
                   {selectedPerson.primary_name}
-                </h3>
+                </h4>
                 {selectedPerson.nickname && (
-                  <span className="text-xs text-pusaka-600">
+                  <p className="text-xs text-slate-500 font-medium">
                     &ldquo;{selectedPerson.nickname}&rdquo;
-                  </span>
+                  </p>
                 )}
+                <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700">
+                  {selectedPerson.gender === "male" ? "Laki-laki" : "Perempuan"} •{" "}
+                  {selectedPerson.is_living ? "Masih Hidup" : "Telah Wafat"}
+                </span>
               </div>
             </div>
 
-            <div className="space-y-2 text-xs text-pusaka-700 bg-pusaka-50/60 p-3.5 rounded-xl border border-pusaka-100">
-              <div className="flex justify-between">
-                <span className="text-pusaka-500">Tahun Lahir:</span>
-                <span className="font-semibold">{selectedPerson.birth_date_year || "Belum ada"}</span>
+            <div className="space-y-3 text-xs border-t border-stroke pt-4">
+              <div className="flex items-start gap-2.5">
+                <Calendar className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
+                <div>
+                  <span className="text-slate-500 block text-[11px]">Rentang Masa Hidup</span>
+                  <p className="font-semibold text-slate-800">
+                    {selectedPerson.birth_date_year || "Tahun tidak tercatat"} –{" "}
+                    {selectedPerson.is_living
+                      ? "Sekarang (Masih Hidup)"
+                      : selectedPerson.death_date_year || "Wafat"}
+                  </p>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-pusaka-500">Status:</span>
-                <span className="font-semibold">
-                  {selectedPerson.is_living
-                    ? "Masih Hidup"
-                    : `Wafat (${selectedPerson.death_date_year || "Tahun tidak ada"})`}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-pusaka-500">Jenis Kelamin:</span>
-                <span className="font-semibold">
-                  {selectedPerson.gender === "male" ? "Laki-laki" : "Perempuan"}
-                </span>
+
+              <div className="flex items-start gap-2.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                <div>
+                  <span className="text-slate-500 block text-[11px]">Status Validasi Dokumen</span>
+                  <p className="font-semibold text-emerald-700">
+                    Klaim Terverifikasi Resmi
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="space-y-2 pt-4 border-t border-pusaka-100">
-            {selectedPerson.id !== data.focus_person_id && (
-              <button
-                onClick={() => handleSetFocus(selectedPerson.id)}
-                className="w-full py-2 px-3 rounded-xl bg-pusaka-100 hover:bg-pusaka-200 text-pusaka-900 text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors"
-              >
-                <GitFork className="w-3.5 h-3.5 text-pusaka-700" />
-                <span>Jadikan Pusat Pohon</span>
-              </button>
-            )}
+          <div className="pt-4 border-t border-stroke space-y-2">
+            <button
+              onClick={() => handleSetFocus(selectedPerson.id)}
+              className="w-full py-2.5 rounded-lg border border-stroke bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-xs"
+            >
+              <Compass className="w-4 h-4 text-primary" />
+              <span>Jadikan Titik Pusat Silsilah</span>
+            </button>
 
             <Link
               href={`/individu/${selectedPerson.id}`}
-              className="w-full py-2 px-3 rounded-xl bg-pusaka-800 hover:bg-pusaka-900 text-white text-xs font-bold flex items-center justify-center space-x-1.5 transition-colors"
+              className="w-full py-2.5 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-xs"
             >
-              <span>Buka Profil Lengkap</span>
+              <span>Buka Profil Lengkap & Bukti</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -243,4 +249,3 @@ export function TreeContainer({ initialData }: TreeContainerProps) {
     </div>
   );
 }
-
