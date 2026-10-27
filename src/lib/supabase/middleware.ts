@@ -9,21 +9,41 @@ interface CookieToSet {
 }
 
 /**
+ * Decode Base64 / Base64URL yang aman untuk Edge Runtime dan Node.js
+ */
+function safeBase64Decode(str: string): string {
+  try {
+    if (typeof Buffer !== "undefined") {
+      return Buffer.from(str, str.includes("-") || str.includes("_") ? "base64url" : "base64").toString("utf-8");
+    }
+  } catch {
+    // Lanjut ke atob fallback
+  }
+
+  try {
+    const base64 = str.replace(/-/g, "+").replace(/_/g, "/");
+    return atob(base64);
+  } catch {
+    return "";
+  }
+}
+
+/**
  * Validasi lokal token JWT tanpa round-trip HTTPS ke server Supabase Cloud.
  * Membaca payload JWT langsung dari cookie sesi (0.01ms vs 600-1000ms network lag).
  */
 function checkLocalTokenValidity(request: NextRequest): { isValid: boolean; expiresSoon: boolean } {
-  const allCookies = request.cookies.getAll();
-  const authCookie = allCookies.find(
-    (c) => c.name.includes("-auth-token") && Boolean(c.value)
-  );
-
-  if (!authCookie) return { isValid: false, expiresSoon: false };
-
   try {
+    const allCookies = request.cookies.getAll();
+    const authCookie = allCookies.find(
+      (c) => c.name.includes("-auth-token") && Boolean(c.value)
+    );
+
+    if (!authCookie) return { isValid: false, expiresSoon: false };
+
     let rawValue = authCookie.value;
     if (rawValue.startsWith("base64-")) {
-      rawValue = Buffer.from(rawValue.slice(7), "base64").toString("utf-8");
+      rawValue = safeBase64Decode(rawValue.slice(7));
     }
 
     let parsed: any;
@@ -39,7 +59,10 @@ function checkLocalTokenValidity(request: NextRequest): { isValid: boolean; expi
     const parts = accessToken.split(".");
     if (parts.length !== 3) return { isValid: false, expiresSoon: false };
 
-    const payload = JSON.parse(Buffer.from(parts[1], "base64url").toString("utf-8"));
+    const payloadStr = safeBase64Decode(parts[1]);
+    if (!payloadStr) return { isValid: false, expiresSoon: true };
+
+    const payload = JSON.parse(payloadStr);
     const now = Math.floor(Date.now() / 1000);
 
     // Masih berlaku lebih dari 60 detik -> Sangat valid, tidak perlu refresh
@@ -63,56 +86,54 @@ export async function updateSession(request: NextRequest) {
     request,
   });
 
-  const pathname = request.nextUrl.pathname;
-  const isAuthRoute =
-    pathname.startsWith("/login") ||
-    pathname.startsWith("/register") ||
-    pathname.startsWith("/forgot-password");
-  const isProtectedRoute =
-    pathname.startsWith("/dashboard") ||
-    pathname.startsWith("/pohon") ||
-    pathname.startsWith("/individu") ||
-    pathname.startsWith("/direktori") ||
-    pathname.startsWith("/kontribusi") ||
-    pathname.startsWith("/sumber") ||
-    pathname.startsWith("/anggota") ||
-    pathname.startsWith("/pengaturan");
+  try {
+    const pathname = request.nextUrl.pathname;
+    const isAuthRoute =
+      pathname.startsWith("/login") ||
+      pathname.startsWith("/register") ||
+      pathname.startsWith("/forgot-password");
+    const isProtectedRoute =
+      pathname.startsWith("/dashboard") ||
+      pathname.startsWith("/pohon") ||
+      pathname.startsWith("/individu") ||
+      pathname.startsWith("/direktori") ||
+      pathname.startsWith("/kontribusi") ||
+      pathname.startsWith("/sumber") ||
+      pathname.startsWith("/anggota") ||
+      pathname.startsWith("/pengaturan");
 
-  // 1. Jalur super cepat: Jika bukan rute auth maupun terproteksi, langsung lewat (0ms)
-  if (!isAuthRoute && !isProtectedRoute) {
-    return supabaseResponse;
-  }
-
-  // 2. Evaluasi token JWT lokal di memori (0.01ms)
-  const tokenState = checkLocalTokenValidity(request);
-
-  // Kasus A: Token JWT terbukti valid & aktif (navigasi sat set tanpa internet)
-  if (tokenState.isValid && !tokenState.expiresSoon) {
-    if (isAuthRoute) {
-      // Pengguna sudah login mencoba buka /login -> arahkan ke dashboard
-      const url = request.nextUrl.clone();
-      url.pathname = "/dashboard";
-      return NextResponse.redirect(url);
-    }
-    // Rute terproteksi langsung diizinkan seketika (0ms)
-    return supabaseResponse;
-  }
-
-  // Kasus B: Tidak ada token sama sekali
-  if (!tokenState.isValid && !tokenState.expiresSoon) {
-    if (isProtectedRoute) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/login";
-      url.searchParams.set("redirectedFrom", pathname);
-      return NextResponse.redirect(url);
-    }
-    if (isAuthRoute) {
+    // 1. Jalur super cepat: Jika bukan rute auth maupun terproteksi, langsung lewat (0ms)
+    if (!isAuthRoute && !isProtectedRoute) {
       return supabaseResponse;
     }
-  }
 
-  // Kasus C: Token mendekati kedaluwarsa atau perlu disegarkan -> panggil Supabase SSR
-  try {
+    // 2. Evaluasi token JWT lokal di memori (0.01ms)
+    const tokenState = checkLocalTokenValidity(request);
+
+    // Kasus A: Token JWT terbukti valid & aktif (navigasi sat set tanpa internet)
+    if (tokenState.isValid && !tokenState.expiresSoon) {
+      if (isAuthRoute) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/dashboard";
+        return NextResponse.redirect(url);
+      }
+      return supabaseResponse;
+    }
+
+    // Kasus B: Tidak ada token sama sekali
+    if (!tokenState.isValid && !tokenState.expiresSoon) {
+      if (isProtectedRoute) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/login";
+        url.searchParams.set("redirectedFrom", pathname);
+        return NextResponse.redirect(url);
+      }
+      if (isAuthRoute) {
+        return supabaseResponse;
+      }
+    }
+
+    // Kasus C: Token mendekati kedaluwarsa atau perlu disegarkan -> panggil Supabase SSR
     const supabase = createServerClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
