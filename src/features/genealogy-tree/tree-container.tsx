@@ -85,7 +85,6 @@ export function TreeContainer({ initialData }: TreeContainerProps) {
         fitView
         minZoom={0.2}
         maxZoom={1.8}
-        proOptions={{ hideAttribution: true }}
       >
         <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#d2bab0" />
         <Controls className="!bg-white !border-pusaka-200 !shadow-sm !rounded-xl" />
