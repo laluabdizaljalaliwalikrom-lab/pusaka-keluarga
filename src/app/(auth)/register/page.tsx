@@ -3,8 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { UserPlus, AlertCircle, CheckCircle2, User, Users, Mail, Lock } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import {
+  MailLineIcon,
+  LockIcon,
+  UserCircleIcon,
+  GroupIcon,
+  CloseIcon,
+  CheckCircleIcon,
+} from "@/components/icons/tailadmin-icons";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -87,118 +94,120 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-whiten">
-      <div className="max-w-md w-full bg-white rounded-xl border border-stroke p-6 sm:p-8 shadow-default space-y-6">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <div className="max-w-md w-full rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-theme-sm space-y-6">
         <div className="text-center space-y-2">
-          <div className="w-11 h-11 rounded-xl bg-primary text-white font-bold text-lg flex items-center justify-center mx-auto shadow-xs">
-            PK
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-500 text-white font-bold mx-auto shadow-theme-xs">
+            <span className="text-xl font-bold tracking-tight">PK</span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight">
+          <h1 className="text-title-sm font-bold text-gray-900 tracking-tight">
             Pendaftaran Trah Keluarga
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-theme-sm text-gray-500">
             Mulai bangun dan dokumentasikan silsilah keluarga besar secara kolaboratif
           </p>
         </div>
 
         {errorMessage && (
-          <div className="p-3.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 flex items-start gap-2.5 text-xs">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
+          <div className="p-3.5 rounded-xl bg-error-50 border border-error-100 text-error-700 flex items-start gap-2.5 text-sm">
+            <CloseIcon className="w-5 h-5 shrink-0 text-error-500 mt-0.5" />
             <span>{errorMessage}</span>
           </div>
         )}
 
-        {successMessage ? (
-          <div className="p-5 rounded-xl bg-emerald-50 border border-emerald-200 text-center space-y-3">
-            <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto" />
-            <p className="text-xs font-semibold text-emerald-900 leading-relaxed">
-              {successMessage}
-            </p>
-            <Link
-              href="/login"
-              className="inline-block mt-2 px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-all shadow-xs"
-            >
-              Ke Halaman Masuk
-            </Link>
+        {successMessage && (
+          <div className="p-3.5 rounded-xl bg-success-50 border border-success-100 text-success-700 flex items-start gap-2.5 text-sm">
+            <CheckCircleIcon className="w-5 h-5 shrink-0 text-success-500 mt-0.5" />
+            <span>{successMessage}</span>
           </div>
-        ) : (
-          <form onSubmit={handleRegister} className="space-y-4 text-xs">
-            <div>
-              <label className="block font-medium text-slate-700 mb-1.5">Nama Lengkap Anda</label>
-              <div className="relative">
-                <input
-                  type="text"
-                  required
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Contoh: Bambang Soedirjo"
-                  className="w-full rounded-lg border border-stroke bg-transparent py-2.5 pl-10 pr-4 text-xs text-slate-800 outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
-                />
-                <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              </div>
-            </div>
-
-            <div>
-              <label className="block font-medium text-slate-700 mb-1.5">Nama Trah / Keluarga Besar</label>
-              <div className="relative">
-                <input
-                  type="text"
-                  required
-                  value={familyName}
-                  onChange={(e) => setFamilyName(e.target.value)}
-                  placeholder="Contoh: Bani Kartosoedirjo, Trah Sastrodiningrat"
-                  className="w-full rounded-lg border border-stroke bg-transparent py-2.5 pl-10 pr-4 text-xs text-slate-800 outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
-                />
-                <Users className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              </div>
-            </div>
-
-            <div>
-              <label className="block font-medium text-slate-700 mb-1.5">Alamat Email</label>
-              <div className="relative">
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="nama@email.com"
-                  className="w-full rounded-lg border border-stroke bg-transparent py-2.5 pl-10 pr-4 text-xs text-slate-800 outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
-                />
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              </div>
-            </div>
-
-            <div>
-              <label className="block font-medium text-slate-700 mb-1.5">Kata Sandi</label>
-              <div className="relative">
-                <input
-                  type="password"
-                  required
-                  minLength={6}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Minimal 6 karakter"
-                  className="w-full rounded-lg border border-stroke bg-transparent py-2.5 pl-10 pr-4 text-xs text-slate-800 outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
-                />
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-2.5 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold shadow-xs transition-colors flex items-center justify-center gap-2 text-xs disabled:opacity-60 cursor-pointer"
-            >
-              <UserPlus className="w-4 h-4" />
-              <span>{loading ? "Mendaftarkan..." : "Daftarkan Trah Keluarga"}</span>
-            </button>
-          </form>
         )}
 
-        <div className="pt-4 border-t border-stroke text-center text-xs text-slate-500">
-          Sudah memiliki akun terdaftar?{" "}
-          <Link href="/login" className="font-semibold text-primary hover:underline">
-            Masuk Sekarang
+        <form onSubmit={handleRegister} className="space-y-4">
+          <div>
+            <label className="mb-1.5 block text-theme-sm font-medium text-gray-700">
+              Nama Lengkap Anda <span className="text-error-500">*</span>
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                required
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="cth. Bambang Trihatmojo"
+                className="h-11 w-full rounded-lg border border-gray-300 bg-transparent pl-11 pr-4 text-sm text-gray-800 placeholder:text-gray-400 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/20 focus:outline-hidden transition"
+              />
+              <UserCircleIcon className="w-5 h-5 text-gray-400 absolute left-3.5 top-3" />
+            </div>
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-theme-sm font-medium text-gray-700">
+              Nama Trah / Keluarga Besar <span className="text-error-500">*</span>
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                required
+                value={familyName}
+                onChange={(e) => setFamilyName(e.target.value)}
+                placeholder="cth. Trah Kartowidjojo"
+                className="h-11 w-full rounded-lg border border-gray-300 bg-transparent pl-11 pr-4 text-sm text-gray-800 placeholder:text-gray-400 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/20 focus:outline-hidden transition"
+              />
+              <GroupIcon className="w-5 h-5 text-gray-400 absolute left-3.5 top-3" />
+            </div>
+            <p className="mt-1 text-xs text-gray-400">
+              Nama trah yang akan dikelola sebagai ruang keluarga pertama Anda
+            </p>
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-theme-sm font-medium text-gray-700">
+              Alamat Email <span className="text-error-500">*</span>
+            </label>
+            <div className="relative">
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="nama@email.com"
+                className="h-11 w-full rounded-lg border border-gray-300 bg-transparent pl-11 pr-4 text-sm text-gray-800 placeholder:text-gray-400 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/20 focus:outline-hidden transition"
+              />
+              <MailLineIcon className="w-5 h-5 text-gray-400 absolute left-3.5 top-3" />
+            </div>
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-theme-sm font-medium text-gray-700">
+              Kata Sandi <span className="text-error-500">*</span>
+            </label>
+            <div className="relative">
+              <input
+                type="password"
+                required
+                minLength={6}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Minimal 6 karakter"
+                className="h-11 w-full rounded-lg border border-gray-300 bg-transparent pl-11 pr-4 text-sm text-gray-800 placeholder:text-gray-400 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/20 focus:outline-hidden transition"
+              />
+              <LockIcon className="w-5 h-5 text-gray-400 absolute left-3.5 top-3" />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-brand-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300 transition cursor-pointer"
+          >
+            <span>{loading ? "Mendaftarkan Trah..." : "Daftar & Buat Ruang Trah"}</span>
+          </button>
+        </form>
+
+        <div className="pt-4 border-t border-gray-200 text-center text-theme-sm text-gray-500">
+          Sudah memiliki akun trah?{" "}
+          <Link href="/login" className="font-semibold text-brand-500 hover:text-brand-600">
+            Masuk di Sini
           </Link>
         </div>
       </div>

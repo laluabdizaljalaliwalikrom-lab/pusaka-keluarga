@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
+import { Outfit } from "next/font/google";
 import "./globals.css";
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
 
 export const metadata: Metadata = {
   title: "Pusaka Keluarga — Pencatatan & Penelusuran Silsilah Lintas Generasi",
@@ -12,11 +20,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id">
-      <body className="antialiased selection:bg-pusaka-200 selection:text-pusaka-900">
+    <html lang="id" className={outfit.variable}>
+      <body className={`${outfit.className} bg-gray-50 text-gray-900 antialiased selection:bg-brand-100 selection:text-brand-900`}>
         {children}
       </body>
     </html>
   );
 }
-

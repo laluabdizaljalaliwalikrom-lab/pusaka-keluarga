@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { UserCheck, UserPlus, Shield, Check, Mail, X } from "lucide-react";
+import {
+  UserCircleIcon,
+  PlusIcon,
+  CheckCircleIcon,
+  CloseIcon,
+} from "@/components/icons/tailadmin-icons";
 import { FamilyRole } from "@/types/database.types";
 
 const INITIAL_MEMBERS = [
@@ -38,27 +43,27 @@ const ROLE_LABELS: Record<FamilyRole, { title: string; desc: string; badge: stri
   owner: {
     title: "Owner / Superadmin",
     desc: "Hak penuh menghapus keluarga dan mengelola keanggotaan",
-    badge: "bg-purple-50 text-purple-700 border border-purple-200",
+    badge: "bg-brand-50 text-brand-600",
   },
   family_admin: {
     title: "Family Administrator",
     desc: "Mengelola anggota, menyetujui usulan, dan merge profil",
-    badge: "bg-blue-50 text-blue-700 border border-blue-200",
+    badge: "bg-blue-light-50 text-blue-light-600",
   },
   editor: {
     title: "Editor (Kurator)",
     desc: "Dapat langsung mengedit silsilah dan mereview usulan",
-    badge: "bg-emerald-50 text-emerald-700 border border-emerald-200",
+    badge: "bg-success-50 text-success-600",
   },
   contributor: {
     title: "Contributor (Anggota)",
     desc: "Melihat data & mengajukan usulan perubahan data",
-    badge: "bg-amber-50 text-amber-700 border border-amber-200",
+    badge: "bg-warning-50 text-warning-600",
   },
   reader: {
     title: "Reader (Pembaca)",
     desc: "Hanya dapat membaca informasi publik tanpa edit",
-    badge: "bg-slate-100 text-slate-700 border border-slate-200",
+    badge: "bg-gray-100 text-gray-700",
   },
 };
 
@@ -99,48 +104,58 @@ export default function AnggotaPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight">
+          <h1 className="text-title-sm font-bold text-gray-900 tracking-tight">
             Manajemen Anggota Keluarga
           </h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Kelola izin akses kolaborasi dan peran anggota dalam Trah Bani Kartosoedirjo
+          <p className="text-theme-sm text-gray-500 mt-0.5">
+            Kelola izin akses kolaborasi dan peran anggota dalam Trah Kartowidjojo
           </p>
         </div>
 
         <button
           onClick={() => setShowInviteModal(true)}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-xs font-semibold text-white shadow-xs hover:bg-primary-hover transition-colors self-start sm:self-auto cursor-pointer"
+          className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600 transition self-start sm:self-auto cursor-pointer"
         >
-          <UserPlus className="w-4 h-4" />
+          <PlusIcon className="w-3.5 h-3.5" />
           <span>Undang Anggota Baru</span>
         </button>
       </div>
 
       {/* Members Table Card (TailAdmin Data Table) */}
-      <div className="rounded-xl border border-stroke bg-white shadow-default overflow-hidden">
-        <div className="p-5 border-b border-stroke flex items-center justify-between">
-          <span className="text-xs font-bold text-slate-800">
+      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pt-5 pb-4 sm:px-6 shadow-theme-xs">
+        <div className="mb-4 flex items-center justify-between">
+          <span className="text-base font-semibold text-gray-900">
             Daftar Anggota Aktif ({members.length} Orang)
           </span>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-stroke text-slate-600 uppercase tracking-wider text-[10px] font-bold">
+        <div className="max-w-full overflow-x-auto">
+          <table className="min-w-full text-left text-sm">
+            <thead className="border-y border-gray-100 bg-gray-50/50">
               <tr>
-                <th className="px-5 py-3.5">Nama & Profil</th>
-                <th className="px-5 py-3.5">Kontak</th>
-                <th className="px-5 py-3.5">Peran Trah</th>
-                <th className="px-5 py-3.5">Bergabung</th>
-                <th className="px-5 py-3.5 text-right">Kelola Peran</th>
+                <th className="py-3 px-3 text-start text-theme-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Nama & Profil
+                </th>
+                <th className="py-3 px-3 text-start text-theme-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Kontak
+                </th>
+                <th className="py-3 px-3 text-start text-theme-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Peran Trah
+                </th>
+                <th className="py-3 px-3 text-start text-theme-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Bergabung
+                </th>
+                <th className="py-3 px-3 text-end text-theme-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Kelola Peran
+                </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stroke text-slate-700">
+            <tbody className="divide-y divide-gray-100 text-gray-700">
               {members.map((member) => (
-                <tr key={member.id} className="hover:bg-slate-50/80 transition-colors">
-                  <td className="px-5 py-3.5">
+                <tr key={member.id} className="hover:bg-gray-50/70 transition">
+                  <td className="py-3.5 px-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0 border border-primary/20">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600 font-semibold text-xs border border-brand-100">
                         {member.name
                           .split(" ")
                           .map((w) => w[0])
@@ -148,17 +163,17 @@ export default function AnggotaPage() {
                           .join("")}
                       </div>
                       <div>
-                        <span className="font-bold text-slate-900 block leading-tight">{member.name}</span>
-                        <span className="text-[11px] text-slate-400">{member.email}</span>
+                        <span className="font-semibold text-gray-900 block leading-tight">{member.name}</span>
+                        <span className="text-xs text-gray-400">{member.email}</span>
                       </div>
                     </div>
                   </td>
 
-                  <td className="px-5 py-3.5 text-slate-600">{member.phone}</td>
+                  <td className="py-3.5 px-3 text-gray-600">{member.phone}</td>
 
-                  <td className="px-5 py-3.5">
+                  <td className="py-3.5 px-3">
                     <span
-                      className={`inline-block px-2.5 py-0.5 rounded font-semibold text-[10px] ${
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full font-medium text-xs ${
                         ROLE_LABELS[member.role].badge
                       }`}
                     >
@@ -166,14 +181,14 @@ export default function AnggotaPage() {
                     </span>
                   </td>
 
-                  <td className="px-5 py-3.5 text-slate-500">{member.joined_at}</td>
+                  <td className="py-3.5 px-3 text-gray-500">{member.joined_at}</td>
 
-                  <td className="px-5 py-3.5 text-right">
+                  <td className="py-3.5 px-3 text-end">
                     {member.role !== "owner" ? (
                       <select
                         value={member.role}
                         onChange={(e) => handleRoleChange(member.id, e.target.value as FamilyRole)}
-                        className="py-1 px-2.5 rounded-lg border border-stroke bg-white text-slate-800 text-xs font-semibold outline-none focus:border-primary cursor-pointer"
+                        className="h-9 rounded-lg border border-gray-300 bg-white px-2.5 text-xs font-medium text-gray-800 outline-none focus:border-brand-300 cursor-pointer"
                       >
                         <option value="family_admin">Family Admin</option>
                         <option value="editor">Editor</option>
@@ -181,7 +196,7 @@ export default function AnggotaPage() {
                         <option value="reader">Reader</option>
                       </select>
                     ) : (
-                      <span className="text-[11px] font-semibold text-slate-400 italic">
+                      <span className="text-xs font-medium text-gray-400 italic">
                         Pemilik Utama (Owner)
                       </span>
                     )}
@@ -194,17 +209,17 @@ export default function AnggotaPage() {
       </div>
 
       {/* Role Guide Card */}
-      <div className="rounded-xl border border-stroke bg-white p-5 shadow-default">
-        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">
+      <div className="rounded-2xl border border-gray-200 bg-white p-5 md:p-6 shadow-theme-xs">
+        <h3 className="text-base font-semibold text-gray-900 mb-3">
           Panduan Peran & Hak Akses Silsilah
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-          {Object.entries(ROLE_LABELS).map(([key, info]) => (
-            <div key={key} className="p-3 rounded-lg bg-slate-50 border border-stroke space-y-1">
-              <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold ${info.badge}`}>
-                {info.title}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-1">
+          {Object.entries(ROLE_LABELS).map(([key, item]) => (
+            <div key={key} className="p-4 rounded-xl border border-gray-100 bg-gray-50/70 space-y-1">
+              <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium ${item.badge}`}>
+                {item.title}
               </span>
-              <p className="text-slate-600 text-[11px] leading-relaxed pt-1">{info.desc}</p>
+              <p className="text-xs text-gray-600 pt-1 leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>
@@ -212,72 +227,68 @@ export default function AnggotaPage() {
 
       {/* Invite Modal */}
       {showInviteModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl border border-stroke max-w-md w-full p-6 shadow-dropdown space-y-4">
-            <div className="flex items-center justify-between border-b border-stroke pb-3">
-              <h3 className="text-sm font-bold text-slate-800">Undang Anggota Keluarga</h3>
+        <div className="fixed inset-0 z-50 bg-gray-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl border border-gray-200 max-w-md w-full p-6 shadow-theme-lg space-y-4">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <h3 className="text-base font-bold text-gray-900">Undang Anggota Keluarga</h3>
               <button
                 onClick={() => setShowInviteModal(false)}
-                className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600"
+                className="p-1 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600"
               >
-                <X className="w-4 h-4" />
+                <CloseIcon className="w-5 h-5" />
               </button>
             </div>
 
-            <p className="text-xs text-slate-600">
-              Undang kerabat atau kurator silsilah untuk berkolaborasi mencatat dan memverifikasi silsilah keluarga.
-            </p>
-
-            <form onSubmit={handleInvite} className="space-y-3 text-xs">
+            <form onSubmit={handleInvite} className="space-y-4 text-sm">
               <div>
-                <label className="block font-medium text-slate-700 mb-1">Nama Lengkap</label>
+                <label className="block font-medium text-gray-700 mb-1.5">Nama Lengkap</label>
                 <input
                   type="text"
                   required
                   value={inviteName}
                   onChange={(e) => setInviteName(e.target.value)}
-                  placeholder="Contoh: Raden Mas Danang"
-                  className="w-full px-3 py-2 rounded-lg border border-stroke bg-transparent text-slate-800 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                  placeholder="cth. Dewi Anggraini"
+                  className="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/20 focus:outline-hidden transition"
                 />
               </div>
 
               <div>
-                <label className="block font-medium text-slate-700 mb-1">Alamat Email</label>
+                <label className="block font-medium text-gray-700 mb-1.5">Alamat Email</label>
                 <input
                   type="email"
                   required
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  placeholder="nama@email.com"
-                  className="w-full px-3 py-2 rounded-lg border border-stroke bg-transparent text-slate-800 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                  placeholder="dewi@email.com"
+                  className="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/20 focus:outline-hidden transition"
                 />
               </div>
 
               <div>
-                <label className="block font-medium text-slate-700 mb-1">Peran yang Diberikan</label>
+                <label className="block font-medium text-gray-700 mb-1.5">Peran Akses Trah</label>
                 <select
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value as FamilyRole)}
-                  className="w-full px-3 py-2 rounded-lg border border-stroke bg-white text-slate-800 outline-none focus:border-primary cursor-pointer"
+                  className="h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-800 outline-none focus:border-brand-300 focus:ring-3 focus:ring-brand-500/20 cursor-pointer"
                 >
-                  <option value="contributor">Contributor (Dapat mengajukan usulan)</option>
-                  <option value="editor">Editor (Dapat mengedit & kurasi)</option>
-                  <option value="family_admin">Family Admin (Admin penuh)</option>
-                  <option value="reader">Reader (Hanya membaca)</option>
+                  <option value="family_admin">Family Administrator</option>
+                  <option value="editor">Editor (Kurator Silsilah)</option>
+                  <option value="contributor">Contributor (Pengusul Data)</option>
+                  <option value="reader">Reader (Hanya Baca)</option>
                 </select>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-stroke">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-gray-100">
                 <button
                   type="button"
                   onClick={() => setShowInviteModal(false)}
-                  className="px-4 py-2 rounded-lg border border-stroke bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs"
+                  className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold text-xs shadow-xs"
+                  className="rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600 transition"
                 >
                   Kirim Undangan
                 </button>

@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { TreeContainer } from "@/features/genealogy-tree/tree-container";
 import { TreeDataPayload } from "@/features/genealogy-tree/tree-layout";
-import { GitFork, HelpCircle, Layers } from "lucide-react";
+import { BoxCubeIcon, CheckCircleIcon } from "@/components/icons/tailadmin-icons";
 import { Suspense } from "react";
 
 // Initial Tree Payload matching synthetic seed data
@@ -266,31 +266,33 @@ function TreeViewContent() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold text-pusaka-900 tracking-tight flex items-center space-x-2">
-            <GitFork className="w-6 h-6 text-pusaka-800" />
+          <h1 className="text-title-sm font-bold text-gray-900 tracking-tight flex items-center space-x-2">
+            <BoxCubeIcon className="w-6 h-6 text-brand-500" />
             <span>Pohon Silsilah Keluarga</span>
           </h1>
-          <p className="text-xs text-pusaka-600">
+          <p className="text-theme-sm text-gray-500 mt-0.5">
             Jelajahi garis keturunan dan hubungan kekeluargaan interaktif
           </p>
         </div>
 
-        <div className="flex items-center space-x-2 text-xs text-pusaka-600 bg-white px-3 py-1.5 rounded-xl border border-pusaka-200">
-          <HelpCircle className="w-4 h-4 text-pusaka-500" />
+        <div className="flex items-center space-x-2 text-xs text-gray-600 bg-white px-3.5 py-2 rounded-xl border border-gray-200 shadow-theme-xs">
+          <CheckCircleIcon className="w-4 h-4 text-brand-500" />
           <span>Klik nodus untuk detail atau mengubah individu pusat</span>
         </div>
       </div>
 
-      <TreeContainer initialData={payload} />
+      <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden shadow-theme-xs">
+        <TreeContainer initialData={payload} />
+      </div>
     </div>
   );
 }
 
 export default function PohonPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-xs text-pusaka-600">Memuat visualisasi silsilah...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-sm text-gray-500">Memuat visualisasi silsilah...</div>}>
       <TreeViewContent />
     </Suspense>
   );

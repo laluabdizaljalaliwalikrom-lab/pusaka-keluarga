@@ -2,15 +2,14 @@
 
 import { useState } from "react";
 import {
-  FolderArchive,
-  Search,
-  Plus,
-  BookOpen,
-  FileCheck,
-  Calendar,
-  MapPin,
-  X,
-} from "lucide-react";
+  FolderIcon,
+  SearchIcon,
+  PlusIcon,
+  DocsIcon,
+  CheckCircleIcon,
+  CalenderIcon,
+  CloseIcon,
+} from "@/components/icons/tailadmin-icons";
 
 const INITIAL_SOURCES = [
   {
@@ -84,32 +83,32 @@ export default function SumberPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight">
+          <h1 className="text-title-sm font-bold text-gray-900 tracking-tight">
             Repositori Sumber & Arsip Bukti
           </h1>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-theme-sm text-gray-500 mt-0.5">
             Dokumentasi akta kelahiran, naskah trah, surat nikah, dan kutipan rujukan fakta otentik
           </p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-xs font-semibold text-white shadow-xs hover:bg-primary-hover transition-colors self-start sm:self-auto cursor-pointer"
+          className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-5 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600 transition self-start sm:self-auto cursor-pointer"
         >
-          <Plus className="w-4 h-4" />
-          <span>Tambah Sumber Baru</span>
+          <PlusIcon className="w-3.5 h-3.5" />
+          <span>Tambah Dokumen Sumber</span>
         </button>
       </div>
 
-      {/* Search Bar (TailAdmin Card) */}
-      <div className="rounded-xl border border-stroke bg-white p-4 shadow-default flex items-center">
+      {/* Search Bar (TailAdmin 2.4 Style) */}
+      <div className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-5 shadow-theme-xs flex items-center">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <SearchIcon className="w-5 h-5 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Cari judul dokumen sumber, penulis, atau repositori..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-xs rounded-lg border border-stroke bg-transparent text-slate-800 outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
+            className="h-11 w-full rounded-lg border border-gray-300 bg-transparent pl-11 pr-4 text-sm text-gray-800 placeholder:text-gray-400 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/20 focus:outline-hidden transition"
           />
         </div>
       </div>
@@ -119,38 +118,38 @@ export default function SumberPage() {
         {filteredSources.map((source) => (
           <div
             key={source.id}
-            className="rounded-xl border border-stroke bg-white p-6 shadow-default hover:shadow-md transition-shadow flex flex-col justify-between"
+            className="rounded-2xl border border-gray-200 bg-white p-6 shadow-theme-xs hover:shadow-theme-md transition-shadow flex flex-col justify-between"
           >
-            <div className="space-y-3">
+            <div className="space-y-3.5">
               <div className="flex items-start justify-between">
-                <span className="px-2.5 py-1 rounded-md bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-semibold">
+                <span className="px-3 py-1 rounded-full bg-warning-50 text-warning-600 text-xs font-semibold">
                   {source.source_type}
                 </span>
-                <span className="text-xs text-slate-500 font-medium">
+                <span className="text-xs text-gray-500 font-medium">
                   Mendukung {source.claims_count} klaim
                 </span>
               </div>
 
-              <h2 className="text-sm md:text-base font-bold text-slate-900 leading-snug">{source.title}</h2>
+              <h2 className="text-base font-bold text-gray-900 leading-snug">{source.title}</h2>
 
-              <div className="space-y-1.5 text-xs text-slate-600">
+              <div className="space-y-2 text-xs text-gray-600">
                 <div className="flex items-center gap-2">
-                  <BookOpen className="w-4 h-4 text-slate-400 shrink-0" />
-                  <span>Pencatat / Penulis: <strong className="text-slate-800">{source.author || "Tidak disebutkan"}</strong></span>
+                  <DocsIcon className="w-4 h-4 text-gray-400 shrink-0" />
+                  <span>Pencatat / Penulis: <strong className="text-gray-800">{source.author || "Tidak disebutkan"}</strong></span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-slate-400 shrink-0" />
-                  <span>Tahun Dokumen: <strong className="text-slate-800">{source.publication_date || "Tidak diketahui"}</strong></span>
+                  <CalenderIcon className="w-4 h-4 text-gray-400 shrink-0" />
+                  <span>Tahun Dokumen: <strong className="text-gray-800">{source.publication_date || "Tidak diketahui"}</strong></span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
-                  <span>Lokasi Arsip: <strong className="text-slate-800">{source.repository}</strong></span>
+                  <FolderIcon className="w-4 h-4 text-gray-400 shrink-0" />
+                  <span>Lokasi Arsip: <strong className="text-gray-800">{source.repository}</strong></span>
                 </div>
               </div>
 
               {source.citation_text && (
-                <div className="mt-3 p-3 rounded-lg bg-slate-50 border border-stroke text-xs text-slate-700">
-                  <span className="font-semibold block text-[11px] text-slate-500 mb-0.5">
+                <div className="mt-3 p-3.5 rounded-xl bg-gray-50 border border-gray-200 text-xs text-gray-700">
+                  <span className="font-semibold block text-xs text-gray-500 mb-1">
                     Catatan Kutipan Rujukan:
                   </span>
                   <p className="leading-relaxed">{source.citation_text}</p>
@@ -158,9 +157,9 @@ export default function SumberPage() {
               )}
             </div>
 
-            <div className="mt-5 pt-3 border-t border-stroke flex items-center justify-between text-xs font-semibold text-slate-700">
-              <span className="text-emerald-600 flex items-center gap-1.5">
-                <FileCheck className="w-4 h-4 text-emerald-500" />
+            <div className="mt-5 pt-3.5 border-t border-gray-100 flex items-center justify-between text-xs font-semibold text-gray-700">
+              <span className="text-success-600 flex items-center gap-1.5">
+                <CheckCircleIcon className="w-4 h-4 text-success-500" />
                 <span>Dokumen Sah & Terverifikasi</span>
               </span>
             </div>
@@ -170,22 +169,22 @@ export default function SumberPage() {
 
       {/* Add Source Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl border border-stroke max-w-lg w-full p-6 shadow-dropdown space-y-4">
-            <div className="flex items-center justify-between border-b border-stroke pb-3">
-              <h3 className="text-sm font-bold text-slate-800">Catat Dokumen Sumber Baru</h3>
+        <div className="fixed inset-0 z-50 bg-gray-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl border border-gray-200 max-w-lg w-full p-6 shadow-theme-lg space-y-4">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <h3 className="text-base font-bold text-gray-900">Catat Dokumen Sumber Baru</h3>
               <button
                 onClick={() => setShowAddModal(false)}
-                className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600"
+                className="p-1 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition"
               >
-                <X className="w-4 h-4" />
+                <CloseIcon className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleAddSource} className="space-y-3 text-xs">
+            <form onSubmit={handleAddSource} className="space-y-4 text-sm">
               <div>
-                <label className="block font-medium text-slate-700 mb-1">
-                  Judul Sumber / Dokumen <span className="text-rose-500">*</span>
+                <label className="block font-medium text-gray-700 mb-1.5">
+                  Judul Sumber / Dokumen <span className="text-error-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -193,39 +192,39 @@ export default function SumberPage() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Misal: Buku Silsilah Trah, Akta Kelahiran No..."
-                  className="w-full px-3 py-2 rounded-lg border border-stroke bg-transparent text-slate-800 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                  className="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/20 focus:outline-hidden transition"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-medium text-slate-700 mb-1">Penulis / Pencatat</label>
+                  <label className="block font-medium text-gray-700 mb-1.5">Penulis / Pencatat</label>
                   <input
                     type="text"
                     value={author}
                     onChange={(e) => setAuthor(e.target.value)}
                     placeholder="Nama pencatat atau instansi"
-                    className="w-full px-3 py-2 rounded-lg border border-stroke bg-transparent text-slate-800 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/20 focus:outline-hidden transition"
                   />
                 </div>
                 <div>
-                  <label className="block font-medium text-slate-700 mb-1">Tahun Dokumen</label>
+                  <label className="block font-medium text-gray-700 mb-1.5">Tahun Dokumen</label>
                   <input
                     type="text"
                     value={pubDate}
                     onChange={(e) => setPubDate(e.target.value)}
                     placeholder="Contoh: 1935"
-                    className="w-full px-3 py-2 rounded-lg border border-stroke bg-transparent text-slate-800 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/20 focus:outline-hidden transition"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-medium text-slate-700 mb-1">Jenis Sumber</label>
+                <label className="block font-medium text-gray-700 mb-1.5">Jenis Sumber</label>
                 <select
                   value={sourceType}
                   onChange={(e) => setSourceType(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-stroke bg-white text-slate-800 outline-none focus:border-primary cursor-pointer"
+                  className="h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-800 outline-none focus:border-brand-300 focus:ring-3 focus:ring-brand-500/20 cursor-pointer"
                 >
                   <option value="Buku Silsilah (Family Book)">Buku Silsilah (Family Book)</option>
                   <option value="Akta Kelahiran (Birth Certificate)">Akta Kelahiran (Birth Certificate)</option>
@@ -236,38 +235,38 @@ export default function SumberPage() {
               </div>
 
               <div>
-                <label className="block font-medium text-slate-700 mb-1">Lokasi Repositori / Penyimpanan</label>
+                <label className="block font-medium text-gray-700 mb-1.5">Lokasi Repositori / Penyimpanan</label>
                 <input
                   type="text"
                   value={repository}
                   onChange={(e) => setRepository(e.target.value)}
                   placeholder="Contoh: Arsip Nasional, Lemari Keluarga Solo"
-                  className="w-full px-3 py-2 rounded-lg border border-stroke bg-transparent text-slate-800 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                  className="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/20 focus:outline-hidden transition"
                 />
               </div>
 
               <div>
-                <label className="block font-medium text-slate-700 mb-1">Teks Kutipan / Penjelasan</label>
+                <label className="block font-medium text-gray-700 mb-1.5">Teks Kutipan / Penjelasan</label>
                 <textarea
                   rows={3}
                   value={citation}
                   onChange={(e) => setCitation(e.target.value)}
                   placeholder="Kutipan relevan yang membuktikan hubungan kekeluargaan..."
-                  className="w-full px-3 py-2 rounded-lg border border-stroke bg-transparent text-slate-800 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                  className="w-full rounded-lg border border-gray-300 bg-transparent p-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/20 focus:outline-hidden transition"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-stroke">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-gray-100">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 rounded-lg border border-stroke bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs"
+                  className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold text-xs shadow-xs"
+                  className="rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600 transition"
                 >
                   Simpan Sumber
                 </button>
